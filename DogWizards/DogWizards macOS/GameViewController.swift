@@ -24,7 +24,7 @@ class GameViewController: NSViewController {
             return Unit.allCases.randomElement()!
         }
 
-        let model = GameModel(startUnit: .dolphin, castSize: 5, deck: [
+        let model = GameModel(startUnit: .dolphin, castSize: 2, deck: [
             CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
             CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
             CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),

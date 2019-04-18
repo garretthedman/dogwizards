@@ -12,7 +12,7 @@ class Card: SKSpriteNode {
 
     // MARK: Properties
 
-    public var model: CardModel
+    public let model: CardModel
     public var isInHolder = false
 
     // MARK: - Initialization

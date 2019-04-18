@@ -12,20 +12,6 @@ class TwoUnitCard: Card {
 
     // MARK: - Properties
 
-    override public var model: CardModel {
-        didSet {
-            func updateLabels() {
-                topLabel.text = model.topUnit.displayString
-                bottomLabel.text = model.bottomUnit.displayString
-            }
-
-            model.didFlip = {
-                updateLabels()
-            }
-            updateLabels()
-        }
-    }
-
     private let topLabel = SKLabelNode()
     private let bottomLabel = SKLabelNode()
     let flipButton = SKSpriteNode()
@@ -52,9 +38,15 @@ class TwoUnitCard: Card {
         flipButton.position = .zero
         addChild(flipButton)
 
-        // force didSet
-        let model = self.model
-        self.model = model
+        func updateLabels() {
+            topLabel.text = model.topUnit.displayString
+            bottomLabel.text = model.bottomUnit.displayString
+        }
+
+        model.didFlip = {
+            updateLabels()
+        }
+        updateLabels()
     }
 
     // MARK: - Helpers
