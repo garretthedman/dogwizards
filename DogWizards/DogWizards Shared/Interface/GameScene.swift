@@ -126,7 +126,7 @@ class GameScene: SKScene {
         let inset = -Design.cardFlipButtonCushion
         let frame = card.flipButton.frame.insetBy(dx: inset, dy: inset)
         if frame.contains(convert(adjustedLocation, to: card)) {
-            card.triggerFlip()
+            card.model.flip()
         }
     }
 

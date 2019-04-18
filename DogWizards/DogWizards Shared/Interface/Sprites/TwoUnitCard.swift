@@ -38,30 +38,28 @@ class TwoUnitCard: Card {
         flipButton.position = .zero
         addChild(flipButton)
 
-        func updateLabels() {
-            topLabel.text = model.topUnit.displayString
-            bottomLabel.text = model.bottomUnit.displayString
-        }
-
-        model.didFlip = {
-            updateLabels()
-        }
+        model.didFlip = didFlip
         updateLabels()
+    }
+
+    func updateLabels() {
+        topLabel.text = model.topUnit.displayString
+        bottomLabel.text = model.bottomUnit.displayString
     }
 
     // MARK: - Helpers
 
-    func triggerFlip() {
+    private func didFlip() {
         let duration = AnimationDuration.cardFlip
 
-        let flipUnitsAction = SKAction.run {
-            self.model.flip()
+        let swapLabelsAction = SKAction.run {
+            self.updateLabels()
         }
 
         let mainActions = SKAction.sequence([
             SKAction.rotate(toAngle: -CGFloat.pi / 2, duration: duration / 2),
             SKAction.rotate(toAngle: CGFloat.pi / 2, duration: 0),
-            flipUnitsAction,
+            swapLabelsAction,
             SKAction.rotate(toAngle: 0, duration: duration / 2)
             ])
         let labelActions = SKAction.sequence([
