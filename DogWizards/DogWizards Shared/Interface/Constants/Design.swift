@@ -27,9 +27,8 @@ struct Design {
     static let cardHolderSizeWidth = CGFloat(200)
     static let cardHolderPaddingSize = CGFloat(10)
 
-
     static let cardShiftScale = CGFloat(0.95)
-    static let cardShiftRotation = CGFloat.pi / 8
+    static let cardShiftRotation = CGFloat.pi / 16
 
     static let cardPickUpScale = CGFloat(0.8)
     static let cardPickUpAlpha = CGFloat(0.9)
