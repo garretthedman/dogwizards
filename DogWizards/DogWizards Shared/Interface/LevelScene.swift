@@ -1,5 +1,5 @@
 //
-//  GameScene.swift
+//  LevelScene.swift
 //  DogWizards Shared
 //
 //  Created by Andrew Finke on 4/16/19.
@@ -8,21 +8,21 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+class LevelScene: SKScene {
 
     // MARK: - Properties
 
-    let model: GameModel
+    let model: LevelModel
     var maxZPosition = CGFloat(1)
 
     var cards = [Card]()
     let cardHolderTray: CardHolderTray
 
-    var panGestureRecognizerData = [GameScenePanGestureRecorgnizer: PanGestureRecognizerMetadata]()
+    var panGestureRecognizerData = [GameViewPanGestureRecorgnizer: PanGestureRecognizerMetadata]()
 
     // MARK: - Initialization
 
-    init(for model: GameModel) {
+    init(for model: LevelModel) {
         self.model = model
         cardHolderTray = CardHolderTray(holderCount: model.castModel.cards.count)
 
@@ -110,7 +110,7 @@ class GameScene: SKScene {
         return card
     }
 
-    func tapGestureRecognizerFired(_ gestureRecognizer: GameSceneTapGestureRecorgnizer) {
+    func tapGestureRecognizerFired(_ gestureRecognizer: GameViewTapGestureRecorgnizer) {
         guard let view = self.view else { return }
 
         let adjustedLocation = convertPoint(fromView: gestureRecognizer.location(in: view))
@@ -130,7 +130,7 @@ class GameScene: SKScene {
         }
     }
 
-    func panGestureRecognizerFired(_ gestureRecognizer: GameScenePanGestureRecorgnizer) {
+    func panGestureRecognizerFired(_ gestureRecognizer: GameViewPanGestureRecorgnizer) {
         guard let view = self.view else { return }
 
         let adjustedLocation = convertPoint(fromView: gestureRecognizer.location(in: view))

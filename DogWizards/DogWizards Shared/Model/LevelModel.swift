@@ -8,7 +8,7 @@
 
 import Foundation
 
-class GameModel {
+class LevelModel {
 
     // MARK: - Properties
 

@@ -10,14 +10,14 @@ import Foundation
 
 #if os(iOS)
 import UIKit
-typealias GameScenePanGestureRecorgnizer = UIPanGestureRecognizer
-typealias GameSceneTapGestureRecorgnizer = UITapGestureRecognizer
-typealias GameScenePanGestureRecorgnizerState = UIPanGestureRecognizer.State
+typealias GameViewPanGestureRecorgnizer = UIPanGestureRecognizer
+typealias GameViewTapGestureRecorgnizer = UITapGestureRecognizer
+typealias GameViewPanGestureRecorgnizerState = UIPanGestureRecognizer.State
 #elseif os(macOS)
 import AppKit
-typealias GameScenePanGestureRecorgnizer = NSPanGestureRecognizer
-typealias GameSceneTapGestureRecorgnizer = NSClickGestureRecognizer
-typealias GameScenePanGestureRecorgnizerState = NSPanGestureRecognizer.State
+typealias GameViewPanGestureRecorgnizer = NSPanGestureRecognizer
+typealias GameViewTapGestureRecorgnizer = NSClickGestureRecognizer
+typealias GameViewPanGestureRecorgnizerState = NSPanGestureRecognizer.State
 #endif
 
 extension CGPoint {
