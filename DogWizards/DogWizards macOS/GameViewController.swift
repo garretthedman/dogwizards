@@ -20,6 +20,8 @@ class GameViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         (view as! GameView).start()
+
+        preferredContentSize = NSSize(width: 800, height: 600)
     }
 
 }

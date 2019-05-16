@@ -44,4 +44,8 @@ class Card: SKSpriteNode {
         fatalError("not implemented")
     }
 
+    public func updateLabels() {
+        fatalError("not implemented")
+    }
+
 }

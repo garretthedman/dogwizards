@@ -19,18 +19,22 @@ class TwoUnitCard: Card {
     // MARK: - Configuration
 
     override func setupInterface() {
-        let fontSize = Design.cardFontSize
+        let fontSize = Design.cardTwoUnitFontSize
         let offset = size.height / 4
         topLabel.fontSize = fontSize
         topLabel.horizontalAlignmentMode = .center
         topLabel.verticalAlignmentMode = .center
         topLabel.position = CGPoint(x: 0, y: offset)
+        topLabel.fontColor = .black
+        topLabel.fontName = Design.cardTwoUnitFontName
         addChild(topLabel)
 
         bottomLabel.fontSize = fontSize
         bottomLabel.horizontalAlignmentMode = .center
         bottomLabel.verticalAlignmentMode = .center
         bottomLabel.position = CGPoint(x: 0, y: -offset)
+        bottomLabel.fontColor = .black
+        bottomLabel.fontName = Design.cardTwoUnitFontName
         addChild(bottomLabel)
 
         flipButton.texture = SKTexture(imageNamed: "Flip - Sketch")
@@ -38,13 +42,36 @@ class TwoUnitCard: Card {
         flipButton.position = .zero
         addChild(flipButton)
 
-        model.didFlip = didFlip
+        model.didUpdate = { update in
+            switch update {
+            case .cast(_):
+                self.updateCastState()
+            case .flipped:
+                self.didFlip()
+            }
+        }
+
         updateLabels()
+        updateCastState()
     }
 
-    func updateLabels() {
-        topLabel.text = model.topUnit.displayString
-        bottomLabel.text = model.bottomUnit.displayString
+    override func updateLabels() {
+        guard case let CardModel.CardUnits.two(top, bottom) = model.units else {
+            fatalError("Two unit card only supports two units")
+        }
+        topLabel.text = top.displayString
+        bottomLabel.text = bottom.displayString
+    }
+
+    func updateCastState() {
+        switch model.castState {
+        case .uncasted:
+            self.texture = SKTexture(imageNamed: "Card - Two")
+        case .incorrectlyCast:
+            self.texture = SKTexture(imageNamed: "Card - Two - Red")
+        case .correctlyCast:
+            self.texture = SKTexture(imageNamed: "Card - Two - Green")
+        }
     }
 
     // MARK: - Helpers

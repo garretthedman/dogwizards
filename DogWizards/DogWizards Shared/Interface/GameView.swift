@@ -10,53 +10,56 @@ import SpriteKit
 
 class GameView: SKView {
 
+    // MARK: - Properties
+
+    let model = GameModel()
+
+    // MARK: - Initialization
+
     func start() {
-        showsFPS = true
-        showsNodeCount = true
-
-
-        func randomUnit() -> Unit {
-            return Unit.allCases.randomElement()!
-        }
-
-        let model = LevelModel(startUnit: .dolphin, castSize: 6, deck: [
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit())
-            ])
-
-        let scene = LevelScene(for: model)
-        presentScene(scene)
-
         configureGestureRecognizers()
+        model.didChangeState = modelTransitioned(to:)
+        modelTransitioned(to: model.state)
+    }
+
+    // MARK: - Model
+
+    func modelTransitioned(to state: GameModel.GameState) {
+        let scene: SKScene
+        switch state {
+        case .level(let levelModel):
+            scene = LevelScene(for: levelModel)
+        case .tutorial(_):
+            scene = SKScene()
+        case .pickCard(_):
+            scene = SKScene()
+        }
+        presentScene(scene)
     }
 
     // MARK: - Gesture Recognizers
 
     func configureGestureRecognizers() {
-        let panGestureRecorgnizer = GameViewPanGestureRecorgnizer(target: self,
+        let panGestureRecognizer = GameViewPanGestureRecognizer(target: self,
                                                                    action: #selector(panGestureRecognizerFired(_:)))
-        addGestureRecognizer(panGestureRecorgnizer)
+        addGestureRecognizer(panGestureRecognizer)
 
-        let tapGestureRecorgnizer = GameViewTapGestureRecorgnizer(target: self,
+        let tapGestureRecognizer = GameViewTapGestureRecognizer(target: self,
                                                                    action: #selector(tapGestureRecognizerFired(_:)))
 
         #if os(iOS)
-        tapGestureRecorgnizer.numberOfTapsRequired = 1
-        tapGestureRecorgnizer.numberOfTouchesRequired = 1
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        tapGestureRecognizer.numberOfTouchesRequired = 1
         #endif
-        addGestureRecognizer(tapGestureRecorgnizer)
+        addGestureRecognizer(tapGestureRecognizer)
     }
 
-    @objc func tapGestureRecognizerFired(_ gestureRecognizer: GameViewTapGestureRecorgnizer) {
+    @objc func tapGestureRecognizerFired(_ gestureRecognizer: GameViewTapGestureRecognizer) {
         guard let scene = self.scene as? LevelScene else { return }
         scene.tapGestureRecognizerFired(gestureRecognizer)
     }
 
-    @objc func panGestureRecognizerFired(_ gestureRecognizer: GameViewPanGestureRecorgnizer) {
+    @objc func panGestureRecognizerFired(_ gestureRecognizer: GameViewPanGestureRecognizer) {
         guard let scene = self.scene as? LevelScene else { return }
         scene.panGestureRecognizerFired(gestureRecognizer)
     }
