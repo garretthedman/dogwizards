@@ -8,10 +8,12 @@
 
 import SpriteKit
 
+/// A card sprite. Likely used view subclasses and not directly instantiated
 class Card: SKSpriteNode {
 
     // MARK: Properties
 
+    /// the card's model
     public let model: CardModel
 
     // MARK: - Initialization
@@ -40,7 +42,13 @@ class Card: SKSpriteNode {
 
     // MARK: - Interface
 
+    /// to be implemented by subclasses
     public func setupInterface() {
+        fatalError("not implemented")
+    }
+
+    /// to be implemented by subclasses
+    public func updateLabels() {
         fatalError("not implemented")
     }
 

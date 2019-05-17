@@ -8,6 +8,7 @@
 
 import SpriteKit
 
+/// A card sprite that supports showing two units
 class TwoUnitCard: Card {
 
     // MARK: - Properties
@@ -19,18 +20,21 @@ class TwoUnitCard: Card {
     // MARK: - Configuration
 
     override func setupInterface() {
-        let fontSize = Design.cardFontSize
         let offset = size.height / 4
-        topLabel.fontSize = fontSize
+        topLabel.fontSize = Design.cardTwoUnitFontSize
         topLabel.horizontalAlignmentMode = .center
         topLabel.verticalAlignmentMode = .center
         topLabel.position = CGPoint(x: 0, y: offset)
+        topLabel.fontColor = .black
+        topLabel.fontName = Design.cardTwoUnitFontName
         addChild(topLabel)
 
-        bottomLabel.fontSize = fontSize
+        bottomLabel.fontSize = Design.cardTwoUnitFontSize
         bottomLabel.horizontalAlignmentMode = .center
         bottomLabel.verticalAlignmentMode = .center
         bottomLabel.position = CGPoint(x: 0, y: -offset)
+        bottomLabel.fontColor = .black
+        bottomLabel.fontName = Design.cardTwoUnitFontName
         addChild(bottomLabel)
 
         flipButton.texture = SKTexture(imageNamed: "Flip - Sketch")
@@ -38,17 +42,50 @@ class TwoUnitCard: Card {
         flipButton.position = .zero
         addChild(flipButton)
 
-        model.didFlip = didFlip
+        // listen to updates from the card model
+        model.didUpdate = { update in
+            switch update {
+            case .cast(_):
+                // the card was cast
+                self.updateCastState()
+            case .flipped:
+                // the card was flipped
+                self.didFlip()
+            }
+        }
+
         updateLabels()
+        updateCastState()
     }
 
-    func updateLabels() {
-        topLabel.text = model.topUnit.displayString
-        bottomLabel.text = model.bottomUnit.displayString
+    override func updateLabels() {
+        // make sure the model is one that has two units
+        guard case let CardModel.CardUnits.two(top, bottom) = model.units else {
+            fatalError("Two unit card only supports two units")
+        }
+        topLabel.text = top.displayString
+        bottomLabel.text = bottom.displayString
+    }
+
+    func updateCastState() {
+        // updates the sprite's texture (image) based on cast state
+
+        switch model.castState {
+        case .uncasted:
+            // a normal card
+            self.texture = SKTexture(imageNamed: "Card - Two")
+        case .incorrectlyCast:
+            // this card was incorrectly cast (unit didn't align with previous card)
+            self.texture = SKTexture(imageNamed: "Card - Two - Red")
+        case .correctlyCast:
+            // this card was correctly cast
+            self.texture = SKTexture(imageNamed: "Card - Two - Green")
+        }
     }
 
     // MARK: - Helpers
 
+    /// run a neat animation when the model units were flipped
     private func didFlip() {
         let duration = AnimationDuration.cardFlip
 

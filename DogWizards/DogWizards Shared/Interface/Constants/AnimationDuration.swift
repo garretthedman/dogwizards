@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// ideally, all animation type constants should be in this file for quick changes
 struct AnimationDuration {
     static let cardShift = TimeInterval(0.25)
     static let cardFlip = TimeInterval(0.25)

@@ -9,6 +9,7 @@
 import Foundation
 import CoreGraphics
 
+/// Used to keep track of the sprites being dragged
 class PanGestureRecognizerMetadata {
     var card: Card
     var lastLocation: CGPoint

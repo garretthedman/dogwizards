@@ -8,6 +8,7 @@
 
 import SpriteKit
 
+/// A sprite that contains holders for cards
 class CardHolderTray: SKSpriteNode {
 
     // MARK: - Properties
@@ -17,6 +18,7 @@ class CardHolderTray: SKSpriteNode {
     // MARK: - Initialization
 
     init(holderCount: Int) {
+        // dynamically calculate size based on number of cards
         let holderSize = Design.cardHolderSizeWidth + Design.cardHolderPaddingSize
         let width = holderSize * CGFloat(holderCount) - Design.cardHolderPaddingSize
         let height = Design.cardHolderSizeWidth * Design.cardHolderSizeRatio

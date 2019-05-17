@@ -8,6 +8,7 @@
 
 import SpriteKit
 
+/// A sprite indicating a user can drop a card on it
 class CardHolder: SKSpriteNode {
 
     // MARK: - Initialization

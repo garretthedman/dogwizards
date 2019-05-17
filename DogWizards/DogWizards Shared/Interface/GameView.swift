@@ -8,57 +8,74 @@
 
 import SpriteKit
 
+/// Core interface component of the game. Hosts the scenes (a level, tutorial, etc.)
 class GameView: SKView {
 
+    // MARK: - Properties
+
+    /// The game model
+    let model = GameModel()
+
+    // MARK: - Initialization
+
+    /// Configures the game view. Should be called by the view controller the hosts the game view
     func start() {
-        showsFPS = true
-        showsNodeCount = true
+        configureGestureRecognizers()
 
+        // listen to changes in model state
+        model.didChangeState = modelTransitioned(to:)
 
-        func randomUnit() -> Unit {
-            return Unit.allCases.randomElement()!
+        // prepare to show the state the model is currently in
+        modelTransitioned(to: model.state)
+    }
+
+    // MARK: - Model
+
+    /// Updates the presented scene to match the state of the game modal
+    func modelTransitioned(to state: GameModel.GameState) {
+        let scene: SKScene
+        switch state {
+        case .level(let levelModel):
+            scene = LevelScene(for: levelModel)
+        case .tutorial(_):
+            scene = SKScene()
+        case .pickCard(_):
+            scene = SKScene()
         }
 
-        let model = LevelModel(startUnit: .dolphin, castSize: 6, deck: [
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit()),
-            CardModel(topUnit: randomUnit(), bottomUnit: randomUnit())
-            ])
-
-        let scene = LevelScene(for: model)
+        // present the new scene on this view
         presentScene(scene)
-
-        configureGestureRecognizers()
     }
 
     // MARK: - Gesture Recognizers
 
+    /// one time configuration of the gesture recognizers for the view. Since they live in the view, not a specific scene, only need to call on the inital setup of the view.
     func configureGestureRecognizers() {
-        let panGestureRecorgnizer = GameViewPanGestureRecorgnizer(target: self,
+        let panGestureRecognizer = GameViewPanGestureRecognizer(target: self,
                                                                    action: #selector(panGestureRecognizerFired(_:)))
-        addGestureRecognizer(panGestureRecorgnizer)
+        addGestureRecognizer(panGestureRecognizer)
 
-        let tapGestureRecorgnizer = GameViewTapGestureRecorgnizer(target: self,
+        let tapGestureRecognizer = GameViewTapGestureRecognizer(target: self,
                                                                    action: #selector(tapGestureRecognizerFired(_:)))
 
         #if os(iOS)
-        tapGestureRecorgnizer.numberOfTapsRequired = 1
-        tapGestureRecorgnizer.numberOfTouchesRequired = 1
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        tapGestureRecognizer.numberOfTouchesRequired = 1
         #endif
-        addGestureRecognizer(tapGestureRecorgnizer)
+        addGestureRecognizer(tapGestureRecognizer)
     }
 
-    @objc func tapGestureRecognizerFired(_ gestureRecognizer: GameViewTapGestureRecorgnizer) {
-        guard let scene = self.scene as? LevelScene else { return }
-        scene.tapGestureRecognizerFired(gestureRecognizer)
+    @objc func tapGestureRecognizerFired(_ gestureRecognizer: GameViewTapGestureRecognizer) {
+        if let scene = self.scene as? LevelScene {
+            scene.tapGestureRecognizerFired(gestureRecognizer)
+        }
+
     }
 
-    @objc func panGestureRecognizerFired(_ gestureRecognizer: GameViewPanGestureRecorgnizer) {
-        guard let scene = self.scene as? LevelScene else { return }
-        scene.panGestureRecognizerFired(gestureRecognizer)
+    @objc func panGestureRecognizerFired(_ gestureRecognizer: GameViewPanGestureRecognizer) {
+        if let scene = self.scene as? LevelScene {
+            scene.panGestureRecognizerFired(gestureRecognizer)
+        }
     }
 
 }

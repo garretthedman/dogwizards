@@ -10,14 +10,14 @@ import Foundation
 
 #if os(iOS)
 import UIKit
-typealias GameViewPanGestureRecorgnizer = UIPanGestureRecognizer
-typealias GameViewTapGestureRecorgnizer = UITapGestureRecognizer
-typealias GameViewPanGestureRecorgnizerState = UIPanGestureRecognizer.State
+typealias GameViewPanGestureRecognizer = UIPanGestureRecognizer
+typealias GameViewTapGestureRecognizer = UITapGestureRecognizer
+typealias GameViewPanGestureRecognizerState = UIPanGestureRecognizer.State
 #elseif os(macOS)
 import AppKit
-typealias GameViewPanGestureRecorgnizer = NSPanGestureRecognizer
-typealias GameViewTapGestureRecorgnizer = NSClickGestureRecognizer
-typealias GameViewPanGestureRecorgnizerState = NSPanGestureRecognizer.State
+typealias GameViewPanGestureRecognizer = NSPanGestureRecognizer
+typealias GameViewTapGestureRecognizer = NSClickGestureRecognizer
+typealias GameViewPanGestureRecognizerState = NSPanGestureRecognizer.State
 #endif
 
 extension CGPoint {
@@ -30,4 +30,9 @@ extension CGPoint {
     }
 }
 
+extension CGRect {
+    var center: CGPoint {
+        return CGPoint(x: midX, y: midY)
+    }
+}
 
