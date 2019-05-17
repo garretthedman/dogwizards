@@ -8,17 +8,19 @@
 
 import SpriteKit
 
+/// A card sprite that supports showing one unit
 class OneUnitCard: Card {
 
     // MARK: - Properties
 
+    /// the unit label
     private let label = SKLabelNode()
 
     // MARK: - Configuration
 
     override func setupInterface() {
-        let fontSize = Design.cardSingleUnitFontSize
-        label.fontSize = fontSize
+        label.fontSize = Design.cardSingleUnitFontSize
+        label.fontName = Design.cardSingleUnitFontName
         label.fontColor = .black
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
@@ -28,6 +30,7 @@ class OneUnitCard: Card {
     }
 
     override func updateLabels() {
+        // make sure the model is one that only has one unit
         guard case let CardModel.CardUnits.one(unit) = model.units else {
             fatalError("One unit card only supports one unit")
         }

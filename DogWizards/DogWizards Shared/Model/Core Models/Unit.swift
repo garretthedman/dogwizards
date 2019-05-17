@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Core object for representing a unit and how it should be displayed
 enum Unit: CaseIterable {
 
     case mouse, pancake, rock, tooth, pizza, kona, dolphin, unicorn

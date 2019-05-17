@@ -8,6 +8,7 @@
 
 import SpriteKit
 
+/// A button sprite that really doesn't do anything special other than be a sprite with a child label node
 class Button: SKSpriteNode {
 
     // MARK: Properties
@@ -33,12 +34,6 @@ class Button: SKSpriteNode {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    // MARK: - Interface
-
-    public func setupInterface() {
-        fatalError("not implemented")
     }
 
 }

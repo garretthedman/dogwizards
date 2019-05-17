@@ -9,17 +9,20 @@
 import CoreGraphics
 import Foundation
 
+// use the correct interface framework depending on if running on iOS or macOS
 #if os(iOS)
 import UIKit
 #elseif os(macOS)
 import AppKit
 #endif
 
+/// ideally, all design type constants should be in this file for quick changes
 struct Design {
-
     static let cardTwoUnitFontSize = CGFloat(30.0)
     static let cardTwoUnitFontName = "AvenirNextCondensed-Medium"
-    static let cardSingleUnitFontSize = CGFloat(55.0)
+
+    static let cardSingleUnitFontSize = CGFloat(30.0)
+    static let cardSingleUnitFontName = "AvenirNextCondensed-Medium"
 
     static let cardSizeRatio = CGFloat(3.5 / 2.5)
     static let cardFlipButtonCushion = CGFloat(15)

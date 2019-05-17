@@ -50,8 +50,8 @@
 		14A13E2A22690D9000F3C1B3 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A13E2922690D9000F3C1B3 /* GameView.swift */; };
 		14A13E2B22690D9000F3C1B3 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A13E2922690D9000F3C1B3 /* GameView.swift */; };
 		14BF4A3C2267B0FE0025A830 /* DogWizardsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BF4A3B2267B0FE0025A830 /* DogWizardsTests.swift */; };
-		14E23DAF228CDBD800897C5A /* CastButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E23DAE228CDBD800897C5A /* CastButton.swift */; };
-		14E23DB0228CDBD800897C5A /* CastButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E23DAE228CDBD800897C5A /* CastButton.swift */; };
+		14E23DAF228CDBD800897C5A /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E23DAE228CDBD800897C5A /* Button.swift */; };
+		14E23DB0228CDBD800897C5A /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E23DAE228CDBD800897C5A /* Button.swift */; };
 		14E23DB2228CEA9600897C5A /* OneUnitCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E23DB1228CEA9600897C5A /* OneUnitCard.swift */; };
 		14E23DB3228CEA9600897C5A /* OneUnitCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E23DB1228CEA9600897C5A /* OneUnitCard.swift */; };
 /* End PBXBuildFile section */
@@ -98,7 +98,7 @@
 		14BF4A392267B0FE0025A830 /* DogWizardsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DogWizardsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		14BF4A3B2267B0FE0025A830 /* DogWizardsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DogWizardsTests.swift; sourceTree = "<group>"; };
 		14BF4A3D2267B0FE0025A830 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		14E23DAE228CDBD800897C5A /* CastButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastButton.swift; sourceTree = "<group>"; };
+		14E23DAE228CDBD800897C5A /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		14E23DB1228CEA9600897C5A /* OneUnitCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneUnitCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -243,8 +243,8 @@
 		148BD040226845EF00B2A218 /* Sprites */ = {
 			isa = PBXGroup;
 			children = (
+				14E23DAE228CDBD800897C5A /* Button.swift */,
 				14393E0122662C58008A87EF /* Card.swift */,
-				14E23DAE228CDBD800897C5A /* CastButton.swift */,
 				14E23DB1228CEA9600897C5A /* OneUnitCard.swift */,
 				14393E4122664A7E008A87EF /* TwoUnitCard.swift */,
 				14393E4722664E1E008A87EF /* CardHolder.swift */,
@@ -402,7 +402,7 @@
 				14E23DB2228CEA9600897C5A /* OneUnitCard.swift in Sources */,
 				148BD0292268321E00B2A218 /* LevelModel.swift in Sources */,
 				14393DD922662C04008A87EF /* AppDelegate.swift in Sources */,
-				14E23DAF228CDBD800897C5A /* CastButton.swift in Sources */,
+				14E23DAF228CDBD800897C5A /* Button.swift in Sources */,
 				1409CAEA228DC87900348942 /* GameModel.swift in Sources */,
 				148BD032226837CF00B2A218 /* Extensions.swift in Sources */,
 				1409CAEC228DC87900348942 /* PickCardModel.swift in Sources */,
@@ -430,7 +430,7 @@
 				14E23DB3228CEA9600897C5A /* OneUnitCard.swift in Sources */,
 				148BD02A2268321E00B2A218 /* LevelModel.swift in Sources */,
 				14393DEA22662C04008A87EF /* AppDelegate.swift in Sources */,
-				14E23DB0228CDBD800897C5A /* CastButton.swift in Sources */,
+				14E23DB0228CDBD800897C5A /* Button.swift in Sources */,
 				1409CAEB228DC87900348942 /* GameModel.swift in Sources */,
 				148BD033226837CF00B2A218 /* Extensions.swift in Sources */,
 				1409CAED228DC87900348942 /* PickCardModel.swift in Sources */,

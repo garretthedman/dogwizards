@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Core model of the game
 class GameModel {
 
     // MARK: - Types
@@ -21,6 +22,7 @@ class GameModel {
     // MARK: - Properties
     
     var state: GameState
+    /// Closure for informing listener (usually a game view) of an update
     var didChangeState: ((_ state: GameState) -> Void)?
 
     // MARK: - Initialization

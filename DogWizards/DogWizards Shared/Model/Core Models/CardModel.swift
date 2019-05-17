@@ -8,31 +8,44 @@
 
 import Foundation
 
+/// Model representing a card
 class CardModel: CustomStringConvertible, Equatable {
 
     // MARK: - Types
-    
-    enum CastState {
-        case uncasted, correctlyCast, incorrectlyCast
-    }
 
+    /// Enum for communicating how the card was updated
     enum Update {
         case cast(CastState), flipped
     }
 
+    /// Enum for tracking cast state
+    enum CastState {
+        case uncasted, correctlyCast, incorrectlyCast
+    }
+
+    /// Enum for saying the type of units of a card
     enum CardUnits {
-        case one(Unit), two(top: Unit, bottom: Unit)
+        /// Indicates a card supports one unit
+        case one(Unit)
+        /// A card that supports two units
+        case two(top: Unit, bottom: Unit)
     }
 
     // MARK: - Properties
 
+    /// The unit(s) of this card
     var units: CardUnits
 
+    /// The uuid of the card for tracking equality
     private let uuid = UUID()
 
+    /// Closure for informing listener (usually a sprite) of an update
     var didUpdate: ((Update) -> Void)?
+
+    /// Tracks cast state of the card
     var castState = CastState.uncasted {
         didSet {
+            // update listener of a cast state change
             didUpdate?(.cast(castState))
         }
     }
@@ -45,11 +58,14 @@ class CardModel: CustomStringConvertible, Equatable {
 
     // MARK: - Helpers
 
+    /// flips the units of the card
     func flip() {
         switch units {
         case .one(_):
+            // can't flip one unit
             didUpdate?(.flipped)
         case .two(let top, let bottom):
+            // flips the top and bottom
             units = .two(top: bottom, bottom: top)
             didUpdate?(.flipped)
         }
