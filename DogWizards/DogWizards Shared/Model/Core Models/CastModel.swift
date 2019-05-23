@@ -26,6 +26,9 @@ class CastModel {
 
     /// the current start unit of the cast
     var startUnit: Unit
+    
+    let endUnit: Unit
+    
     /// the user cards in the cast (not including the start unit)
     var cards: [CardModel?]
 
@@ -34,8 +37,9 @@ class CastModel {
 
     // MARK: - Initialization
 
-    init(startUnit: Unit, size: Int) {
+    init(startUnit: Unit, endUnit: Unit, size: Int) {
         self.startUnit = startUnit
+        self.endUnit = endUnit
         cards = [CardModel?](repeating: nil, count: size)
     }
 
@@ -113,6 +117,21 @@ class CastModel {
             didUpdate?(.castResult(unit))
         case .two(let top, _):
             didUpdate?(.castResult(top))
+        }
+    }
+    
+    func isCastSuccessful() -> Bool {
+        let compacted = cards.compactMap { $0 }
+        guard compacted.filter({ $0.castState != CardModel.CastState.correctlyCast }).isEmpty,
+            let lastCardUnits = compacted.last?.units else {
+            return false
+        }
+        
+        switch lastCardUnits {
+        case .one(let unit):
+            return endUnit == unit
+        case .two(let top,_):
+            return endUnit == top
         }
     }
 

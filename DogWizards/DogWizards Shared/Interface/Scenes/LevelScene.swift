@@ -42,7 +42,7 @@ class LevelScene: SKScene {
     /// Top label indicating current cast result
     private let castResultLabel = SKLabelNode(text: "X")
     /// Goal label
-    private let castGoalLabel = SKLabelNode(text: "Goal: Pizza")
+    private let castGoalLabel = SKLabelNode(text: "")
     /// Node which contains all the overlays from the cast targets
     private let castOverlayNode = SKNode()
 
@@ -147,7 +147,7 @@ class LevelScene: SKScene {
         addChild(castResultLabel)
 
         // position goal label under result label
-        castGoalLabel.text = "Goal: Pizza"
+        castGoalLabel.text = "Goal: " + model.endUnit.displayString
         castGoalLabel.fontColor = .black
         castGoalLabel.fontSize = 40
         castGoalLabel.fontName = "AvenirNext-Medium"
@@ -582,6 +582,7 @@ class LevelScene: SKScene {
                 castTargets.removeFirst()
             }
         case .ended:
+            model.checkForCompletion()
             // remove all the overlays
             castOverlayNode.removeAllChildren()
             // clear the cast states
