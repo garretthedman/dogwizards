@@ -14,4 +14,5 @@ struct AnimationDuration {
     static let cardFlip = TimeInterval(0.25)
     static let cardPickUp = TimeInterval(0.1)
     static let cardMoveToHolder = TimeInterval(0.2)
+    static let startButtonMove = TimeInterval(0.15)
 }

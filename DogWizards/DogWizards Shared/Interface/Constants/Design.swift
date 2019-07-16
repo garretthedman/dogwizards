@@ -18,16 +18,16 @@ import AppKit
 
 /// ideally, all design type constants should be in this file for quick changes
 struct Design {
-    static let cardTwoUnitFontSize = CGFloat(30.0)
-    static let cardTwoUnitFontName = "AvenirNextCondensed-Medium"
+    static let cardTwoUnitFontSize = CGFloat(26)
+    static let cardTwoUnitFontName = "Avenir"
 
-    static let cardSingleUnitFontSize = CGFloat(30.0)
-    static let cardSingleUnitFontName = "AvenirNextCondensed-Medium"
+    static let cardSingleUnitFontSize = CGFloat(26)
+    static let cardSingleUnitFontName = "Avenir"
 
     static let cardSizeRatio = CGFloat(3.5 / 2.5)
     static let cardFlipButtonCushion = CGFloat(15)
 
-    static let cardSizeWidth = CGFloat(110)
+    static let cardSizeWidth = CGFloat(120)
     static let cardPaddingSize = CGFloat(20)
 
     static let cardHolderSizeRatio = CGFloat(1.3)
@@ -40,7 +40,7 @@ struct Design {
     static let cardPickUpScale = CGFloat(0.8)
     static let cardPickUpAlpha = CGFloat(0.9)
 
-    static let buttonWidth = CGFloat(120)
+    static let buttonWidth = CGFloat(180)
     static let buttonHeight = CGFloat(60)
 
     static let backgroundColor = #colorLiteral(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)

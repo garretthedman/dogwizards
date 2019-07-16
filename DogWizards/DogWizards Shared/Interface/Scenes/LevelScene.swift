@@ -34,7 +34,7 @@ class LevelScene: SKScene {
     private let startCard: OneUnitCard
 
     /// The cast button
-    private let castButton = Button(text: "CAST")
+    private let castButton = Button(text: "Perform!")
 
     /// The tray that holds the user's cards to cast. Each slot in the tray has a visual affordance indicating a card can be dropped.
     private let cardHolderTray: CardHolderTray
@@ -51,6 +51,9 @@ class LevelScene: SKScene {
     /// All the start unit buttons that are shown when the user wants to change the start card
     private var startUnitButtons = [Button]()
 
+    /// All the background images for the game
+    let streetBackground = SKSpriteNode()
+    
     // MARK: - Gesture Tracking
 
     /// Used to track the cards the user is panning accross the screen
@@ -69,7 +72,13 @@ class LevelScene: SKScene {
             // Cancel all active gestures
             panGestureRecognizerData = [:]
             // Update the button label
-            castButton.label.text = isCasting ? "X" : "CAST"
+            if (isCasting){
+                castButton.label.text = "Perform!"
+                castButton.label.fontColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+            }else{
+                castButton.label.fontColor = .black
+            }
+           //castButton.label.text = isCasting ? "X" : "PERFORM"
 
             // Fade out any cards not part of the cast
             let alpha: CGFloat = isCasting ? 0.25 : 1.0
@@ -111,6 +120,13 @@ class LevelScene: SKScene {
         scaleMode = .aspectFit
         backgroundColor = Design.backgroundColor
         anchorPoint = CGPoint(x: 0, y: 0)
+        
+        // add images for the background
+        streetBackground.texture = SKTexture(imageNamed: "rockBack")
+        streetBackground.position = CGPoint(x: Design.sceneSize.width/2, y: Design.sceneSize.height/1.2)
+        streetBackground.size = CGSize(width: 560, height: 249)
+        addChild(streetBackground)
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -134,7 +150,7 @@ class LevelScene: SKScene {
             + (Design.cardHolderSizeWidth + Design.cardHolderPaddingSize) / 2
 
         cardHolderTray.position = CGPoint(x: xPosition,
-                                          y: size.height / 4 * 2.5)
+                                          y: size.height / 1.9)
         addChild(cardHolderTray)
 
         // position large result label at top of screen
@@ -143,7 +159,7 @@ class LevelScene: SKScene {
         castResultLabel.fontSize = 100
         castResultLabel.fontName = "AvenirNext-Medium"
         castResultLabel.position = CGPoint(x: size.width / 2,
-                                          y: cardHolderTray.position.y + cardHolderTray.size.height + 80)
+                                          y: cardHolderTray.position.y + cardHolderTray.size.height+130)
         addChild(castResultLabel)
 
         // position goal label under result label
@@ -152,12 +168,12 @@ class LevelScene: SKScene {
         castGoalLabel.fontSize = 30
         castGoalLabel.fontName = "AvenirNext-Medium"
         castGoalLabel.position = CGPoint(x: size.width / 2,
-                                           y: cardHolderTray.position.y + cardHolderTray.size.height + 25)
+                                           y: cardHolderTray.position.y + cardHolderTray.size.height+40)
         addChild(castGoalLabel)
 
         // position cast button under tray
         castButton.position = CGPoint(x: size.width / 2,
-                                      y: cardHolderTray.position.y - Design.buttonHeight / 2 - 40)
+                                      y: cardHolderTray.position.y - Design.buttonHeight / 2 - 25 )
         addChild(castButton)
 
 
@@ -168,15 +184,20 @@ class LevelScene: SKScene {
 
         // create buttons for possible start units (hidden to start)
         for unit in model.startUnits {
-            let button = Button(text: unit.displayString)
-            button.zPosition = -1
-            button.alpha = 0.0
-            button.position = CGPoint(x: startCard.position.x,
-                                      y: startCard.position.y)
-            addChild(button)
-            startUnitButtons.append(button)
+            
+            if (unit != .start){
+                let button = Button(text: unit.displayString)
+                button.zPosition = -1
+                button.alpha = 0.0
+                button.position = CGPoint(x: startCard.position.x,
+                                          y: startCard.position.y)
+                addChild(button)
+                startUnitButtons.append(button)
+            }else {
+                print("Had start!")
+                print(unit.displayString)
+            }
         }
-
         addChild(castOverlayNode)
     }
 
@@ -206,11 +227,16 @@ class LevelScene: SKScene {
     /// show the start unit option buttons
     func showStartUnitOptions() {
         for (index, button) in startUnitButtons.enumerated() {
-            let position =  CGPoint(x: startCard.position.x,
-                                    y: startCard.position.y - startCard.size.height - (10 + Design.buttonHeight) * CGFloat(index))
+           
+           //position under the start card
+            /*let position =  CGPoint(x: startCard.position.x,
+                                    y: startCard.position.y - startCard.size.height - (10 + Design.buttonHeight) * CGFloat(index))*/
+            
+            let position = CGPoint(x: startCard.position.x - Design.buttonWidth + 10, y: startCard.position.y + (startCard.size.height/2 - 40) - (10 + Design.buttonHeight) * CGFloat(index))
+            
             button.run(.group([
-                .fadeAlpha(to: 1.0, duration: 0.25),
-                .move(to: position, duration: 0.25)])
+                .fadeAlpha(to: 1.0, duration: AnimationDuration.startButtonMove),
+                .move(to: position, duration: AnimationDuration.startButtonMove)])
             )
         }
     }
@@ -221,8 +247,8 @@ class LevelScene: SKScene {
             let position =  CGPoint(x: startCard.position.x,
                                     y: startCard.position.y)
             button.run(.group([
-                .fadeAlpha(to: 0.0, duration: 0.25),
-                .move(to: position, duration: 0.25)])
+                .fadeAlpha(to: 0.0, duration: AnimationDuration.startButtonMove),
+                .move(to: position, duration: AnimationDuration.startButtonMove)])
             )
         }
     }
@@ -354,11 +380,13 @@ class LevelScene: SKScene {
                 if button.frame.contains(adjustedLocation) {
 
                     // get the unit at that index
-                    let startUnit = model.startUnits[index]
+                    let startUnit = model.startUnits[index+1]
                     // update the cast model
                     model.castModel.startUnit = startUnit
                     // update the card model
                     startCard.model.units = .one(startUnit)
+                    // update the goal image
+                    modelUpdated(update: .castResult(model.castModel.startUnit))
                     // trigger a ui update
                     startCard.updateLabels()
                     // hide the start unit option buttons
@@ -587,6 +615,8 @@ class LevelScene: SKScene {
             model.checkForCompletion()
             // remove all the overlays
             castOverlayNode.removeAllChildren()
+            //exit cast
+            isCasting.toggle()
             // clear the cast states
             model.castModel.resetCardCastStates()
         default:

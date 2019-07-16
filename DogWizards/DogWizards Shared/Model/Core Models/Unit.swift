@@ -37,7 +37,7 @@ enum Unit: CaseIterable {
             case .kona: return "🐶"
             case .dolphin: return "🐬"
             case .unicorn: return "🦄"
-            case .start: return "Start"
+            case .start: return "?"
         }
     }
 }
