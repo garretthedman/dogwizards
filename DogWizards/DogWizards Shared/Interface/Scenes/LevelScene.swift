@@ -140,19 +140,19 @@ class LevelScene: SKScene {
         // position large result label at top of screen
         castResultLabel.text = "?"
         castResultLabel.fontColor = .black
-        castResultLabel.fontSize = 70
+        castResultLabel.fontSize = 100
         castResultLabel.fontName = "AvenirNext-Medium"
         castResultLabel.position = CGPoint(x: size.width / 2,
-                                          y: cardHolderTray.position.y + cardHolderTray.size.height + 100)
+                                          y: cardHolderTray.position.y + cardHolderTray.size.height + 80)
         addChild(castResultLabel)
 
         // position goal label under result label
         castGoalLabel.text = "Goal: " + model.endUnit.displayString
         castGoalLabel.fontColor = .black
-        castGoalLabel.fontSize = 40
+        castGoalLabel.fontSize = 30
         castGoalLabel.fontName = "AvenirNext-Medium"
         castGoalLabel.position = CGPoint(x: size.width / 2,
-                                           y: cardHolderTray.position.y + cardHolderTray.size.height + 40)
+                                           y: cardHolderTray.position.y + cardHolderTray.size.height + 25)
         addChild(castGoalLabel)
 
         // position cast button under tray
@@ -265,7 +265,7 @@ class LevelScene: SKScene {
         case .castResult(let result):
             // a new cast result was created
 
-            let text = result?.displayString ?? "?"
+            let text = result?.displayStringImage ?? "?"
             let isDiff = castResultLabel.text != text
 
             if isCasting && isDiff {
@@ -315,7 +315,7 @@ class LevelScene: SKScene {
 
         // the location of the tap in the game scene
         let adjustedLocation = convertPoint(fromView: gestureRecognizer.location(in: view))
-
+        
         if let card = card(at: adjustedLocation) as? TwoUnitCard, !isCasting {
             // The tap was on a card while not casting
 
@@ -327,6 +327,7 @@ class LevelScene: SKScene {
                 card.model.flip()
                 return
             }
+            
         } else if castButton.frame.contains(adjustedLocation) {
             // The tap was on the cast button
 
@@ -415,6 +416,7 @@ class LevelScene: SKScene {
                 .scale(to: Design.cardPickUpScale, duration: AnimationDuration.cardPickUp)
             ]
             gesture.card.run(.group(group))
+
         case .changed:
             for (index, cardHolder) in cardHolderTray.holders.enumerated() where cardHolder.frame.contains(trayPoint) {
                 // the gesture is now over a holder in the card tray

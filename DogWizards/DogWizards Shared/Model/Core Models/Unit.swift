@@ -11,18 +11,10 @@ import Foundation
 /// Core object for representing a unit and how it should be displayed
 enum Unit: CaseIterable {
 
-    case mouse, pancake, rock, tooth, pizza, kona, dolphin, unicorn
+    case mouse, pancake, rock, tooth, pizza, kona, dolphin, unicorn, start
 
     var displayString: String {
         switch self {
-//        case .mouse: return "🐁"
-//        case .pancake: return "🥞"
-//        case .rock: return "🗿"
-//        case .tooth: return "🦷"
-//        case .pizza: return "🍕"
-//        case .kona: return "🐶"
-//        case .dolphin: return "🐬"
-//        case .unicorn: return "🦄"
         case .mouse: return "Mouse"
         case .pancake: return "Pancake"
         case .rock: return "Rock"
@@ -31,6 +23,21 @@ enum Unit: CaseIterable {
         case .kona: return "Kona"
         case .dolphin: return "Dolphin"
         case .unicorn: return "Unicorn"
+        case .start: return "Start"
+        }
+    }
+    
+    var displayStringImage: String{
+        switch self{
+            case .mouse: return "🐁"
+            case .pancake: return "🥞"
+            case .rock: return "🗿"
+            case .tooth: return "🦷"
+            case .pizza: return "🍕"
+            case .kona: return "🐶"
+            case .dolphin: return "🐬"
+            case .unicorn: return "🦄"
+            case .start: return "Start"
         }
     }
 }
