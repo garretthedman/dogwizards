@@ -44,7 +44,7 @@ class GameModel {
          */
         
         let model = LevelModel(startUnits: [.start, .dolphin, .rock], endUnit: .rock, castSize: 1, deck: [
-            CardModel(units: .two(top: .dolphin, bottom: .rock))])
+            CardModel(units: .two(top: .rock, bottom: .dolphin))])
         
         state = GameState.level(model)
         
@@ -88,7 +88,7 @@ class GameModel {
             }
             
             else if levelNumber == 4 {
-                let nextLevel = LevelModel(startUnits: [.start, .pancake, .dolphin, .mouse, .rock], endUnit: .rock, castSize: 3, deck: [
+                let nextLevel = LevelModel(startUnits: [.start, .unicorn, .mouse, .rock], endUnit: .rock, castSize: 3, deck: [
                     CardModel(units: .two(top: .mouse, bottom: .unicorn)),
                     CardModel(units: .two(top: .rock, bottom: .mouse)),
                     CardModel(units: .two(top: .unicorn, bottom: .mouse))
@@ -120,7 +120,7 @@ class GameModel {
                     ])
                 state = GameState.level(nextLevel)
                 nextLevel.didUpdate = levelUpdated(update:)
-                levelNumber += 1
+                levelNumber = 1
             }
         }
     }
