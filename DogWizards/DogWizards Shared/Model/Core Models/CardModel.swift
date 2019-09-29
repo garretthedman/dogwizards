@@ -69,6 +69,7 @@ class CardModel: CustomStringConvertible, Equatable {
             units = .two(top: bottom, bottom: top)
             didUpdate?(.flipped)
         }
+        Logging.shared.log(event: .spellFlipped, description: description)
     }
 
     // MARK: - CustomStringConvertible

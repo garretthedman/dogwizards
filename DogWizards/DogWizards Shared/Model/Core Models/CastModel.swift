@@ -149,6 +149,7 @@ class CastModel {
             // if the new compacted version is diff than the previous, then update the listner that we shifted the position of some cards
             didUpdate?(.shift)
         }
+        Logging.shared.log(event: .spellsStartedZag, description: cards.description)
     }
 
     // MARK: - Dragging
@@ -156,7 +157,9 @@ class CastModel {
     /// remove a card from the cast model
     func pickUp(card: Card) {
         guard let index = cards.firstIndex(of: card.model) else { return }
+        let cardDescription = cards[index]?.description ?? "??"
         cards[index] = nil
+        Logging.shared.log(event: .spellRemoved, description: cardDescription + ", now: \(cards)")
     }
 
     /// clear the space in prep for a card drop from a specified direction
@@ -189,6 +192,7 @@ class CastModel {
         if !cards.contains(card) && cards[index] == nil {
             cards[index] = card
             // there was space, drop was successful
+            Logging.shared.log(event: .spellAdded, description: card.description + ", now: \(cards)")
             return true
         } else {
             // no space, card not dropped

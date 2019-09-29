@@ -35,6 +35,8 @@
 		14393E4622664A98008A87EF /* CastModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14393E4422664A98008A87EF /* CastModel.swift */; };
 		14393E4822664E1E008A87EF /* CardHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14393E4722664E1E008A87EF /* CardHolder.swift */; };
 		14393E4922664E1E008A87EF /* CardHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14393E4722664E1E008A87EF /* CardHolder.swift */; };
+		143C37AE23403B3000FF5F01 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C37AD23403B3000FF5F01 /* Logging.swift */; };
+		143C37AF23403B3000FF5F01 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C37AD23403B3000FF5F01 /* Logging.swift */; };
 		148BD0292268321E00B2A218 /* LevelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148BD0282268321E00B2A218 /* LevelModel.swift */; };
 		148BD02A2268321E00B2A218 /* LevelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148BD0282268321E00B2A218 /* LevelModel.swift */; };
 		148BD02C2268323500B2A218 /* CardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148BD02B2268323500B2A218 /* CardModel.swift */; };
@@ -50,6 +52,8 @@
 		14A13E2A22690D9000F3C1B3 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A13E2922690D9000F3C1B3 /* GameView.swift */; };
 		14A13E2B22690D9000F3C1B3 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A13E2922690D9000F3C1B3 /* GameView.swift */; };
 		14BF4A3C2267B0FE0025A830 /* DogWizardsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BF4A3B2267B0FE0025A830 /* DogWizardsTests.swift */; };
+		14C03C4723404D4100641157 /* MyParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 14C03C4623404D4100641157 /* MyParticle.sks */; };
+		14C03C4823404D4100641157 /* MyParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 14C03C4623404D4100641157 /* MyParticle.sks */; };
 		14E23DAF228CDBD800897C5A /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E23DAE228CDBD800897C5A /* Button.swift */; };
 		14E23DB0228CDBD800897C5A /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E23DAE228CDBD800897C5A /* Button.swift */; };
 		14E23DB2228CEA9600897C5A /* OneUnitCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E23DB1228CEA9600897C5A /* OneUnitCard.swift */; };
@@ -88,6 +92,7 @@
 		14393E4122664A7E008A87EF /* TwoUnitCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoUnitCard.swift; sourceTree = "<group>"; };
 		14393E4422664A98008A87EF /* CastModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastModel.swift; sourceTree = "<group>"; };
 		14393E4722664E1E008A87EF /* CardHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHolder.swift; sourceTree = "<group>"; };
+		143C37AD23403B3000FF5F01 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		148BD0282268321E00B2A218 /* LevelModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelModel.swift; sourceTree = "<group>"; };
 		148BD02B2268323500B2A218 /* CardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardModel.swift; sourceTree = "<group>"; };
 		148BD02E226837B400B2A218 /* PanGestureRecognizerMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanGestureRecognizerMetadata.swift; sourceTree = "<group>"; };
@@ -98,6 +103,7 @@
 		14BF4A392267B0FE0025A830 /* DogWizardsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DogWizardsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		14BF4A3B2267B0FE0025A830 /* DogWizardsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DogWizardsTests.swift; sourceTree = "<group>"; };
 		14BF4A3D2267B0FE0025A830 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		14C03C4623404D4100641157 /* MyParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyParticle.sks; sourceTree = "<group>"; };
 		14E23DAE228CDBD800897C5A /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		14E23DB1228CEA9600897C5A /* OneUnitCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneUnitCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -172,6 +178,7 @@
 				148BD03D2268459200B2A218 /* Interface */,
 				148BD03E226845A300B2A218 /* Model */,
 				148BD031226837CF00B2A218 /* Extensions.swift */,
+				143C37AD23403B3000FF5F01 /* Logging.swift */,
 				14393DD022662C04008A87EF /* Assets.xcassets */,
 			);
 			path = "DogWizards Shared";
@@ -212,6 +219,7 @@
 		148BD03D2268459200B2A218 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				14C03C4623404D4100641157 /* MyParticle.sks */,
 				14A13E2922690D9000F3C1B3 /* GameView.swift */,
 				1409CAF0228DC9CF00348942 /* Scenes */,
 				148BD03F226845E600B2A218 /* Constants */,
@@ -365,6 +373,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14393DE122662C04008A87EF /* LaunchScreen.storyboard in Resources */,
+				14C03C4723404D4100641157 /* MyParticle.sks in Resources */,
 				14393DF722662C04008A87EF /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -374,6 +383,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14393DEF22662C04008A87EF /* Main.storyboard in Resources */,
+				14C03C4823404D4100641157 /* MyParticle.sks in Resources */,
 				14393DF822662C04008A87EF /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -395,6 +405,7 @@
 				14393E4822664E1E008A87EF /* CardHolder.swift in Sources */,
 				148BD02C2268323500B2A218 /* CardModel.swift in Sources */,
 				1409CAEE228DC87900348942 /* TutorialModel.swift in Sources */,
+				143C37AE23403B3000FF5F01 /* Logging.swift in Sources */,
 				14393E3C226645C0008A87EF /* Unit.swift in Sources */,
 				14393DF522662C04008A87EF /* LevelScene.swift in Sources */,
 				14393DDB22662C04008A87EF /* GameViewController.swift in Sources */,
@@ -423,6 +434,7 @@
 				14393E4922664E1E008A87EF /* CardHolder.swift in Sources */,
 				148BD02D2268323500B2A218 /* CardModel.swift in Sources */,
 				1409CAEF228DC87900348942 /* TutorialModel.swift in Sources */,
+				143C37AF23403B3000FF5F01 /* Logging.swift in Sources */,
 				14393E3D226645C0008A87EF /* Unit.swift in Sources */,
 				14393DF622662C04008A87EF /* LevelScene.swift in Sources */,
 				14393DEC22662C04008A87EF /* GameViewController.swift in Sources */,

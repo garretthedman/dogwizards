@@ -40,10 +40,16 @@ class LevelModel {
         self.deck = deck
     }
     
-    func checkForCompletion() {
+    func checkForCompletion() -> Bool {
         if castModel.isCastSuccessful() {
             // castModel.resetCardCastStates()
-            didUpdate?(.completed(start: castModel.startUnit, end: castModel.endUnit))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                self.didUpdate?(.completed(start: self.castModel.startUnit,
+                                           end: self.castModel.endUnit))
+            }
+            return true
+        } else {
+            return false
         }
     }
 }

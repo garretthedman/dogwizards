@@ -31,6 +31,8 @@ class GameModel {
     
     var levelNumber = 1
 
+    var levelStartDate = Date()
+
     // MARK: - Initialization
     
     init() {
@@ -43,8 +45,12 @@ class GameModel {
          CardModel(units: .two(top: randomUnit(), bottom: randomUnit())),
          */
         
-        let model = LevelModel(startUnits: [.start, .dolphin, .rock], endUnit: .rock, castSize: 1, deck: [
-            CardModel(units: .two(top: .rock, bottom: .dolphin))])
+        let model = LevelModel(startUnits: [.start, .pizza, .pancake, .dolphin, .mouse, .rock], endUnit: .rock, castSize: 4, deck: [
+        CardModel(units: .two(top: .dolphin, bottom: .mouse)),
+        CardModel(units: .two(top: .pizza, bottom: .rock)),
+        CardModel(units: .two(top: .mouse, bottom: .pancake)),
+        CardModel(units: .two(top: .pizza, bottom: .pancake))
+        ])
         
         state = GameState.level(model)
         
@@ -55,7 +61,8 @@ class GameModel {
     func levelUpdated(update: LevelModel.Update) {
         switch update {
         case .completed(let start, let end):
-            
+            Logging.shared.log(event: .levelCompleted, description: "number: \(levelNumber), time: \(-levelStartDate.timeIntervalSinceNow)")
+            levelStartDate = Date()
             if levelNumber == 1 {
                 let nextLevel = LevelModel(startUnits: [.start, .rock, .unicorn], endUnit: .rock, castSize: 1, deck: [
                     CardModel(units: .two(top: .unicorn, bottom: .rock)),

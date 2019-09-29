@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        Logging.shared.log(event: .appOpened)
         let controller = GameViewController()
 
         window = UIWindow(frame: UIScreen.main.bounds)
