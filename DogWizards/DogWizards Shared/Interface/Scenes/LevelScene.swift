@@ -658,8 +658,4 @@ class LevelScene: SKScene {
         castOverlayNode.addChild(targetOverlay)
         return targetOverlay
     }
-
-    override func touchesBegan(with event: NSEvent) {
-        super.touchesBegan(with: event)
-    }
 }
