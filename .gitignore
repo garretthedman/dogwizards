@@ -86,3 +86,5 @@ WikiRaces/fastlane/report.xml
 WikiRaces/fastlane/README.md
 
 *.xcuserstate
+
+DogWizards/.DS_Store

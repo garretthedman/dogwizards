@@ -39,27 +39,43 @@ class Logging {
         return url
     }()
 
-    private var events = [(date: Date, type: Event, description: String)]() {
+    private var events = [(date: Date, type: Event, activeCards: String, description: String)]() {
         didSet {
             saveToDisk()
         }
     }
 
     static let shared = Logging()
+    var activeLevel: LevelModel?
 
     // MARK: - Helpers -
 
     func log(event: Event, description: String = "") {
-        print("Event: \(event), description: \(description)")
-        events.append((Date(), event, description))
+        let activeCards = activeCardsString()
+        print("Event: \(event), activeCards: \(activeCards), description: \(description)")
+        events.append((Date(), event, activeCards, description))
+    }
+
+    private func activeCardsString() -> String {
+        var string = ""
+        for card in activeLevel?.castModel.cards ?? [] {
+            if let card = card {
+                string += card.description
+            } else {
+                string += "Empty"
+            }
+            string += ","
+        }
+        return string
     }
 
     private func saveToDisk() {
         writeQueue.async {
-            var string = "Date,Event,Description\n"
+            var string = "Date,Event,Cast,Description\n"
             for event in self.events {
                 string += Logging.dateFormatter.string(from: event.date) + ","
                 string += "\"" + event.type.rawValue + "\","
+                string += "\"" + event.activeCards.description + "\","
                 string += "\"" + event.description + "\"\n"
             }
             guard let data = string.data(using: .utf8) else { fatalError() }

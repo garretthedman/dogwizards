@@ -69,7 +69,6 @@ class GameView: SKView {
         if let scene = self.scene as? LevelScene {
             scene.tapGestureRecognizerFired(gestureRecognizer)
         }
-
     }
 
     @objc func panGestureRecognizerFired(_ gestureRecognizer: GameViewPanGestureRecognizer) {
@@ -77,5 +76,4 @@ class GameView: SKView {
             scene.panGestureRecognizerFired(gestureRecognizer)
         }
     }
-
 }

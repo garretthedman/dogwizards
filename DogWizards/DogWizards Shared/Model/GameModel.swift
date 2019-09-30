@@ -24,6 +24,9 @@ class GameModel {
     var state: GameState {
         didSet {
             didChangeState?(state)
+            if case .level(let level) = state {
+                Logging.shared.activeLevel = level
+            }
         }
     }
     /// Closure for informing listener (usually a game view) of an update
@@ -49,9 +52,8 @@ class GameModel {
         CardModel(units: .two(top: .rock, bottom: .dolphin))])
         
         state = GameState.level(model)
-        
         model.didUpdate = levelUpdated(update:)
-        
+        Logging.shared.activeLevel = model
     }
     
     func levelUpdated(update: LevelModel.Update) {
