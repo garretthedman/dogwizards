@@ -45,12 +45,8 @@ class GameModel {
          CardModel(units: .two(top: randomUnit(), bottom: randomUnit())),
          */
         
-        let model = LevelModel(startUnits: [.start, .pizza, .pancake, .dolphin, .mouse, .rock], endUnit: .rock, castSize: 4, deck: [
-        CardModel(units: .two(top: .dolphin, bottom: .mouse)),
-        CardModel(units: .two(top: .pizza, bottom: .rock)),
-        CardModel(units: .two(top: .mouse, bottom: .pancake)),
-        CardModel(units: .two(top: .pizza, bottom: .pancake))
-        ])
+        let model = LevelModel(startUnits: [.start, .dolphin, .rock], endUnit: .rock, castSize: 1, deck: [
+        CardModel(units: .two(top: .rock, bottom: .dolphin))])
         
         state = GameState.level(model)
         

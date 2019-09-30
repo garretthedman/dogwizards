@@ -136,6 +136,7 @@ class LevelScene: SKScene {
     // MARK: - Scene Configuration
 
     override func didMove(to view: SKView) {
+        run(SKAction.sequence([.fadeOut(withDuration: 0), .wait(forDuration: 0.25), .fadeIn(withDuration: 1.0)]))
         configureCardHolderTray()
         configureCards()
 
@@ -632,6 +633,8 @@ class LevelScene: SKScene {
                 addEmitter(position: startCard.position)
                 startCard.run(fade)
                 isUserInteractionEnabled = false
+
+                self.run(SKAction.sequence([.wait(forDuration: 2.0), .fadeOut(withDuration: 1.0)]))
             } else {
                 Logging.shared.log(event: .spellsZagged, description: "incorrect Cast")
                 // remove all the overlays
@@ -654,5 +657,9 @@ class LevelScene: SKScene {
         targetOverlay.zPosition = newMaxZPosition()
         castOverlayNode.addChild(targetOverlay)
         return targetOverlay
+    }
+
+    override func touchesBegan(with event: NSEvent) {
+        super.touchesBegan(with: event)
     }
 }

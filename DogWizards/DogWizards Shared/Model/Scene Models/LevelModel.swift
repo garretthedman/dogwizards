@@ -43,7 +43,7 @@ class LevelModel {
     func checkForCompletion() -> Bool {
         if castModel.isCastSuccessful() {
             // castModel.resetCardCastStates()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 self.didUpdate?(.completed(start: self.castModel.startUnit,
                                            end: self.castModel.endUnit))
             }
