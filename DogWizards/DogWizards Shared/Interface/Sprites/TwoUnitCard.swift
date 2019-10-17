@@ -59,12 +59,22 @@ class TwoUnitCard: Card {
     }
 
     override func updateLabels() {
-        // make sure the model is one that has two units
-        guard case let CardModel.CardUnits.two(top, bottom) = model.units else {
-            fatalError("Two unit card only supports two units")
+        // make sure the model is one that has two values
+        guard case let CardModel.CardValues.two(top, bottom) = model.values else {
+            fatalError("Two unit card only supports two values")
         }
-        topLabel.text = top.displayString
-        bottomLabel.text = bottom.displayString
+
+        if top.quantity == 1 {
+            topLabel.text = top.unit.displayString
+        } else {
+            topLabel.text = top.displayString
+        }
+
+        if bottom.quantity == 1 {
+            bottomLabel.text = bottom.unit.displayString
+        } else {
+            bottomLabel.text = bottom.displayString
+        }
     }
 
     func updateCastState() {

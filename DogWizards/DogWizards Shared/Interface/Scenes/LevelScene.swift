@@ -33,6 +33,8 @@ class LevelScene: SKScene {
     /// The far left start card sprite
     private let startCard: OneUnitCard
 
+    private let startCardHolder: CardHolder
+
     /// The cast button
     private let castButton = Button(text: "Perform!")
 
@@ -65,6 +67,8 @@ class LevelScene: SKScene {
 
     /// The model to represent
     private let model: LevelModel
+
+    private let _colorManager = _ColorManager()
 
     /// Bool indicating if in casting more
     private var isCasting = false {
@@ -106,6 +110,8 @@ class LevelScene: SKScene {
         }
     }
 
+    var lastCorrectlyCastUnit: Unit?
+
     // MARK: - Initialization
 
     init(for model: LevelModel) {
@@ -114,8 +120,9 @@ class LevelScene: SKScene {
         // create a tray that can hold the max amount of cards supported in this level's cast
         cardHolderTray = CardHolderTray(holderCount: model.castModel.cards.count)
         // create the far left card indicating the start unit
-        startCard = OneUnitCard(model: CardModel(units: .one(model.castModel.startUnit)))
-
+        startCard = OneUnitCard(model: CardModel(values: .one(model.castModel.startValue)))
+        startCardHolder = CardHolder()
+        
         super.init(size: Design.sceneSize)
         scaleMode = .aspectFit
         backgroundColor = Design.backgroundColor
@@ -179,15 +186,20 @@ class LevelScene: SKScene {
 
 
         // position start card to left of tray
-        startCard.position = CGPoint(x: cardHolderTray.position.x - Design.cardSizeWidth / 2 - 10,
+        startCard.position = CGPoint(x: cardHolderTray.position.x - Design.cardHolderSizeWidth / 2 - Design.cardHolderPaddingSize,
                                        y: cardHolderTray.position.y + (Design.cardHolderSizeWidth * Design.cardHolderSizeRatio) / 2)
         addChild(startCard)
 
+        startCardHolder.color = .clear
+        startCardHolder.colorBlendFactor = 1
+        startCardHolder.position = startCard.position
+        startCardHolder.zPosition = startCard.zPosition - 1
+        addChild(startCardHolder)
+
         // create buttons for possible start units (hidden to start)
-        for unit in model.startUnits {
-            
-            if (unit != .start){
-                let button = Button(text: unit.displayString)
+        for value in model.startValues {
+            if (value.unit != .start){
+                let button = Button(text: value.unit.displayString)
                 button.zPosition = -1
                 button.alpha = 0.0
                 button.position = CGPoint(x: startCard.position.x,
@@ -196,7 +208,7 @@ class LevelScene: SKScene {
                 startUnitButtons.append(button)
             }else {
                 print("Had start!")
-                print(unit.displayString)
+                print(value.displayString)
             }
         }
         addChild(castOverlayNode)
@@ -381,19 +393,19 @@ class LevelScene: SKScene {
                 if button.frame.contains(adjustedLocation) {
 
                     // get the unit at that index
-                    let startUnit = model.startUnits[index+1]
+                    let startValue = model.startValues[index+1]
                     // update the cast model
-                    model.castModel.startUnit = startUnit
+                    model.castModel.startValue = startValue
                     // update the card model
-                    startCard.model.units = .one(startUnit)
+                    startCard.model.values = .one(startValue)
                     // update the goal image
-                    modelUpdated(update: .castResult(model.castModel.startUnit))
+                    modelUpdated(update: .castResult(model.castModel.startValue.unit))
                     // trigger a ui update
                     startCard.updateLabels()
                     // hide the start unit option buttons
                     isShowingStartUnitOptions = false
 
-                    Logging.shared.log(event: .startCardChange, description: startUnit.displayString)
+                    Logging.shared.log(event: .startCardChange, description: startValue.unit.displayString)
                     break
                 }
             }
@@ -507,7 +519,7 @@ class LevelScene: SKScene {
             }).filter({ model.castModel.index(of: $0.model) != nil })
 
             for card in sortedCards {
-                switch card.model.units {
+                switch card.model.values {
                 case .one(_):
                     // if the card has one unit, then the whole card is the target (not used yet)
                     let target = CastPathTarget(card: card,
@@ -562,7 +574,9 @@ class LevelScene: SKScene {
                         // remove this target
                         castTargets.removeFirst()
                         // manually trigger an interface update to this result
-                        modelUpdated(update: .castResult(model.castModel.startUnit))
+                        modelUpdated(update: .castResult(model.castModel.startValue.unit))
+
+                        lastCorrectlyCastUnit = model.castModel.startValue.unit
                     }
                     return
                 }
@@ -605,9 +619,28 @@ class LevelScene: SKScene {
                         // if this will be a bad cast, show red
                         target.overlay.fillColor = .red
                         target.overlay.isHidden = false
+
+                        if case .two(let top, let bottom) = target.card.model.values, let lastCorrectlyCastUnit = lastCorrectlyCastUnit {
+                            let text = castGoalLabel.text
+//                            castGoalLabel.text = "Incorrect cast from a \(lastCorrectlyCastUnit) to a \(bottom.unit)"
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+//                                self.castGoalLabel.text = text
+                            }
+
+
+
+                        } else {
+                            fatalError()
+                        }
                     } else {
                         target.overlay.fillColor = .green
                         target.overlay.isHidden = false
+
+                        if case .two(let top, _) = target.card.model.values {
+                            lastCorrectlyCastUnit = top.unit
+                        } else {
+                            fatalError()
+                        }
                     }
                 }
 
@@ -639,6 +672,83 @@ class LevelScene: SKScene {
                 Logging.shared.log(event: .spellsZagged, description: "incorrect Cast")
                 // remove all the overlays
                 castOverlayNode.removeAllChildren()
+
+
+                let text = castGoalLabel.text
+
+                let textSeq = SKAction.sequence([
+                    .fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4),
+                    .run {
+                        self.castGoalLabel.text = "Make areas with matching COLORS have matching WORDS"
+                        },
+                    .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
+                    .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2),
+                    .wait(forDuration: AnimationDuration.holderFillViewsWait),
+                    .fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4),
+                    .run {
+                        self.castGoalLabel.text = text
+                        },
+                    .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
+                    .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2),
+
+                ])
+                castGoalLabel.run(textSeq)
+
+                guard case let CardModel.CardValues.one(value) = startCard.model.values else {
+                    fatalError("hmmm")
+                }
+
+                func randomColor() -> SKColor {
+                    return SKColor(red: CGFloat.random(in: 0..<255) / 255.0,
+                                   green: CGFloat.random(in: 0..<255) / 255.0,
+                                   blue: CGFloat.random(in: 0..<255) / 255.0,
+                                   alpha: 1.0)
+                }
+
+                var lastColor = randomColor()
+                let colorSeq = SKAction.sequence([
+                    .fadeIn(withDuration: AnimationDuration.holderFillViewsFade),
+                    .wait(forDuration: AnimationDuration.holderFillViewsWait),
+                    .fadeOut(withDuration: AnimationDuration.holderFillViewsFade)
+                ])
+                startCardHolder.fullFillShape?.fillColor = lastColor
+                startCardHolder.fullFillShape?.run(colorSeq)
+
+                for (index, cardHolder) in cardHolderTray.holders.enumerated() {
+                    let activeCards = model.castModel.cards.compactMap { $0 }
+                    if index < activeCards.count {
+                        guard case let CardModel.CardValues.two(top, bottom) = activeCards[index].values else {
+                            fatalError("hmmm")
+                        }
+                        cardHolder.lowerFillShape?.fillColor = lastColor
+                        lastColor = randomColor()
+                        cardHolder.upperFillShape?.fillColor = lastColor
+                        cardHolder.lowerFillShape?.run(colorSeq)
+                        cardHolder.upperFillShape?.run(colorSeq)
+
+//                        if let midPoint = lastTopCardMidpoint {
+//                            let bottomCardMidpoint = CGPoint(x: cardHolderTray.position.x + cardHolder.position.x, y: cardHolderTray.position.y + cardHolder.position.y - cardHolder.size.height / 4)
+//                            let path = CGMutablePath()
+//                            path.move(to: midPoint)
+//                            path.addArc(center: midPoint, radius: 20, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: false)
+//                            path.addLine(to: bottomCardMidpoint)
+//                            path.addArc(center: bottomCardMidpoint, radius: 20, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: false)
+//                            path.closeSubpath()
+//
+//                            let shape = SKShapeNode(path: path)
+//                            shape.fillColor = _colorManager.color(for: top.unit)
+//                            shape.strokeColor = _colorManager.color(for: top.unit)
+//
+//                            shape.zPosition = 100000000000
+//                            addChild(shape)
+//                            print(shape)
+//                        }
+//                        lastTopCardMidpoint = CGPoint(x: cardHolderTray.position.x + cardHolder.position.x, y: cardHolderTray.position.y + cardHolder.position.y + cardHolder.size.height / 4)
+                    }
+
+
+                }
+
                 //exit cast
                 isCasting.toggle()
                 // clear the cast states

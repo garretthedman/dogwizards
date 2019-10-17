@@ -8,6 +8,19 @@
 
 import Foundation
 
+struct CardValue {
+    let unit: Unit
+    let quantity: CGFloat
+    init(unit: Unit, quantity: CGFloat = 1) {
+        self.unit = unit
+        self.quantity = quantity
+    }
+
+    var displayString: String {
+        return quantity.description + " " + unit.displayString
+    }
+}
+
 /// Model representing a card
 class CardModel: CustomStringConvertible, Equatable {
 
@@ -23,18 +36,18 @@ class CardModel: CustomStringConvertible, Equatable {
         case uncasted, correctlyCast, incorrectlyCast
     }
 
-    /// Enum for saying the type of units of a card
-    enum CardUnits {
+    /// Enum for saying the type of values of a card
+    enum CardValues {
         /// Indicates a card supports one unit
-        case one(Unit)
+        case one(CardValue)
         /// A card that supports two units
-        case two(top: Unit, bottom: Unit)
+        case two(top: CardValue, bottom: CardValue)
     }
 
     // MARK: - Properties
 
-    /// The unit(s) of this card
-    var units: CardUnits
+    /// The values(s) of this card
+    var values: CardValues
 
     /// The uuid of the card for tracking equality
     private let uuid = UUID()
@@ -52,32 +65,33 @@ class CardModel: CustomStringConvertible, Equatable {
 
     // MARK: - Initialization
 
-    init(units: CardUnits) {
-        self.units = units
+    init(values: CardValues) {
+        self.values = values
     }
 
     // MARK: - Helpers
 
     /// flips the units of the card
     func flip() {
-        switch units {
+        switch values {
         case .one(_):
             // can't flip one unit
             didUpdate?(.flipped)
         case .two(let top, let bottom):
             // flips the top and bottom
-            units = .two(top: bottom, bottom: top)
+            values = .two(top: bottom, bottom: top)
             didUpdate?(.flipped)
         }
+
         Logging.shared.log(event: .spellFlipped, description: description)
     }
 
     // MARK: - CustomStringConvertible
 
     var description: String {
-        switch units {
-        case .one(let unit):
-            return unit.displayString
+        switch values {
+        case .one(let value):
+            return value.displayString
         case .two(let top, let bottom):
             return top.displayString
                 + " / "

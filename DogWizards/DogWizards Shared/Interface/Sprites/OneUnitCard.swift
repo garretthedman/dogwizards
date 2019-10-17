@@ -30,12 +30,16 @@ class OneUnitCard: Card {
     }
 
     override func updateLabels() {
-        // make sure the model is one that only has one unit
-        guard case let CardModel.CardUnits.one(unit) = model.units else {
-            fatalError("One unit card only supports one unit")
+        // make sure the model is one that only has one value
+        guard case let CardModel.CardValues.one(value) = model.values else {
+            fatalError("One unit card only supports one value")
         }
 
-        label.text = unit.displayString
+        if value.quantity == 1 {
+            label.text = value.unit.displayString
+        } else {
+            label.text = value.displayString
+        }
     }
 
 }

@@ -28,11 +28,13 @@ struct Design {
     static let cardFlipButtonCushion = CGFloat(15)
 
     static let cardSizeWidth = CGFloat(120)
-    static let cardPaddingSize = CGFloat(20)
+    static let cardPaddingSize = CGFloat(40)
 
     static let cardHolderSizeRatio = CGFloat(1.3)
-    static let cardHolderSizeWidth = CGFloat(135)
+    static let cardHolderSizeWidth = CGFloat(145)
     static let cardHolderPaddingSize = CGFloat(10)
+
+    static let cardHolderFillShapeCornerRadius = CGFloat(10)
 
     static let cardShiftScale = CGFloat(0.95)
     static let cardShiftRotation = CGFloat.pi / 16

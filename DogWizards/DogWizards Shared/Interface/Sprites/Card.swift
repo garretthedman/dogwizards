@@ -20,7 +20,6 @@ class Card: SKSpriteNode {
 
     init(texture: SKTexture?, color: SKColor, size: CGSize, model: CardModel) {
         self.model = model
-
         super.init(texture: texture, color: color, size: size)
         setupInterface()
     }

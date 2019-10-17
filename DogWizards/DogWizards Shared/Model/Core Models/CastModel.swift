@@ -25,7 +25,7 @@ class CastModel {
     // MARK: - Properties
 
     /// the current start unit of the cast
-    var startUnit: Unit
+    var startValue: CardValue
     
     let endUnit: Unit
     
@@ -37,8 +37,8 @@ class CastModel {
 
     // MARK: - Initialization
 
-    init(startUnit: Unit, endUnit: Unit, size: Int) {
-        self.startUnit = startUnit
+    init(startValue: CardValue, endUnit: Unit, size: Int) {
+        self.startValue = startValue
         self.endUnit = endUnit
         cards = [CardModel?](repeating: nil, count: size)
     }
@@ -75,27 +75,27 @@ class CastModel {
         let previousUnit: Unit
         if index == 0 {
             // if this is the first card, then the previous unit was the start unit
-            previousUnit = startUnit
+            previousUnit = startValue.unit
         } else {
             // get the previous card's unit
             guard let previousCastCard = cards[index - 1] else { return nil }
-            switch previousCastCard.units {
-            case .one(let unit):
+            switch previousCastCard.values {
+            case .one(let value):
                 // a one unit card would be that unit
-                previousUnit = unit
+                previousUnit = value.unit
             case .two(let top, _):
                 // a two unit card would be the top unit
-                previousUnit = top
+                previousUnit = top.unit
             }
         }
 
-        switch castCard.units {
-        case .one(let unit):
+        switch castCard.values {
+        case .one(let value):
             // if this card has one unit, compare to that unit
-            return previousUnit == unit ? .correctlyCast : .incorrectlyCast
+            return previousUnit == value.unit ? .correctlyCast : .incorrectlyCast
         case .two(_, let bottom):
             // if this card has two units, compare to it's bottom unit
-            return previousUnit == bottom ? .correctlyCast : .incorrectlyCast
+            return previousUnit == bottom.unit ? .correctlyCast : .incorrectlyCast
         }
     }
 
@@ -105,33 +105,33 @@ class CastModel {
         guard let castCard = cards[index], let castState = potentialCastResult(at: index) else { return }
         castCard.castState = castState
 
-        // get the units of the last card to be correctly cast
-        guard let lastCorrectCardUnits = cards.last(where: { $0?.castState == .correctlyCast })??.units else {
+        // get the values of the last card to be correctly cast
+        guard let lastCorrectCardValues = cards.last(where: { $0?.castState == .correctlyCast })??.values else {
             // no card has been correctly cast, so we have no result
             didUpdate?(.castResult(nil))
             return
         }
 
-        switch lastCorrectCardUnits {
-        case .one(let unit):
-            didUpdate?(.castResult(unit))
+        switch lastCorrectCardValues {
+        case .one(let value):
+            didUpdate?(.castResult(value.unit))
         case .two(let top, _):
-            didUpdate?(.castResult(top))
+            didUpdate?(.castResult(top.unit))
         }
     }
     
     func isCastSuccessful() -> Bool {
         let compacted = cards.compactMap { $0 }
         guard compacted.filter({ $0.castState != CardModel.CastState.correctlyCast }).isEmpty,
-            let lastCardUnits = compacted.last?.units else {
+            let lastCardValues = compacted.last?.values else {
             return false
         }
         
-        switch lastCardUnits {
-        case .one(let unit):
-            return endUnit == unit
+        switch lastCardValues {
+        case .one(let value):
+            return endUnit == value.unit
         case .two(let top,_):
-            return endUnit == top
+            return endUnit == top.unit
         }
     }
 
