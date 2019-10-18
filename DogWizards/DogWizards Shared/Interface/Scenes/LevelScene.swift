@@ -69,6 +69,8 @@ class LevelScene: SKScene {
     private let model: LevelModel
 
     private let _colorManager = _ColorManager()
+    private var lastHolder: CardHolder
+    private var currentHolder: CardHolder
 
     /// Bool indicating if in casting more
     private var isCasting = false {
@@ -122,6 +124,8 @@ class LevelScene: SKScene {
         // create the far left card indicating the start unit
         startCard = OneUnitCard(model: CardModel(values: .one(model.castModel.startValue)))
         startCardHolder = CardHolder()
+        lastHolder = startCardHolder
+        currentHolder = startCardHolder
         
         super.init(size: Design.sceneSize)
         scaleMode = .aspectFit
@@ -353,6 +357,8 @@ class LevelScene: SKScene {
     func tapGestureRecognizerFired(_ gestureRecognizer: GameViewTapGestureRecognizer) {
         guard let view = self.view else { return }
 
+        _cleanFills()
+
         // the location of the tap in the game scene
         let adjustedLocation = convertPoint(fromView: gestureRecognizer.location(in: view))
         
@@ -433,6 +439,8 @@ class LevelScene: SKScene {
             // save the card and the user's location
             let data = PanGestureRecognizerMetadata(card: card, lastLocation: adjustedLocation)
             panGestureRecognizerData[gestureRecognizer] = data
+
+            _cleanFills()
         }
 
         // make sure we have info on the gesture's card and location
@@ -498,7 +506,7 @@ class LevelScene: SKScene {
             break
         }
     }
-
+    var lastColor = SKColor.red
     /// process the pan gesture if casting
     func processPanGestureRecognizerFiredWhileCasting(_ gestureRecognizer: GameViewPanGestureRecognizer) {
         let adjustedLocation = convertPoint(fromView: gestureRecognizer.location(in: view))
@@ -569,8 +577,15 @@ class LevelScene: SKScene {
                     // if there is no index, then this is the start card (not tracked by the cast model)
                     if target.card == startCard {
                         // set the overlay to green and show it
-                        target.overlay.fillColor = .green
-                        target.overlay.isHidden = false
+//                        target.overlay.fillColor = .green
+//                        target.overlay.isHidden = false
+
+                        lastHolder = startCardHolder
+                        currentHolder = startCardHolder
+
+                        startCardHolder.fullFillShape?.fillColor = lastColor
+                        startCardHolder.fullFillShape?.alpha = 1.0
+
                         // remove this target
                         castTargets.removeFirst()
                         // manually trigger an interface update to this result
@@ -584,6 +599,11 @@ class LevelScene: SKScene {
                 // only check this target if the card is the next to be casted
                 guard model.castModel.isCardNextInChain(at: index) else { return }
 
+                let holder = cardHolderTray.holders[index]
+
+
+                currentHolder = holder
+
                 if target.isFinalCardPoint {
                     // this target is the final target needed to complete the card
 
@@ -592,8 +612,8 @@ class LevelScene: SKScene {
 
                     if target.card.model.castState == .incorrectlyCast {
                         // if this was a bad cast, show a red overlay
-                        target.overlay.fillColor = .red
-                        target.overlay.isHidden = false
+//                        target.overlay.fillColor = .red
+//                        target.overlay.isHidden = false
 
                         // run the bad animation
                         let wiggleAction = SKAction.sequence([
@@ -605,20 +625,33 @@ class LevelScene: SKScene {
                         target.card.run(wiggleAction)
                     } else {
                         // correct cast, show green and pulse animation
-                        target.overlay.fillColor = .green
-                        target.overlay.isHidden = false
-                        target.card.run(.sequence([
-                            .scale(to: 1.1, duration: 0.1),
-                            .scale(to: 1.0, duration: 0.1)
-                            ]))
+//                        target.overlay.fillColor = .green
+//                        target.overlay.isHidden = false
+//                        target.card.run(.sequence([
+//                            .scale(to: 1.1, duration: 0.1),
+//                            .scale(to: 1.0, duration: 0.1)
+//                            ]))
+
+lastHolder = currentHolder
+
                     }
+
+                    lastColor = randomColor()
+
+
+                    holder.upperFillShape?.fillColor = lastColor
+                    holder.upperFillShape?.alpha = 1.0
+
                 } else if let castResult = model.castModel.potentialCastResult(at: index) {
                     // not the final target for this card, but get what the cast result of the full card will be
 
+                    holder.lowerFillShape?.fillColor = lastColor
+                    holder.lowerFillShape?.alpha = 1.0
+
                     if castResult == .incorrectlyCast {
                         // if this will be a bad cast, show red
-                        target.overlay.fillColor = .red
-                        target.overlay.isHidden = false
+//                        target.overlay.fillColor = .red
+//                        target.overlay.isHidden = false
 
                         if case .two(let top, let bottom) = target.card.model.values, let lastCorrectlyCastUnit = lastCorrectlyCastUnit {
                             let text = castGoalLabel.text
@@ -633,15 +666,24 @@ class LevelScene: SKScene {
                             fatalError()
                         }
                     } else {
-                        target.overlay.fillColor = .green
-                        target.overlay.isHidden = false
+
+
+
+
+//                        target.overlay.fillColor = .green
+//                        target.overlay.isHidden = false
 
                         if case .two(let top, _) = target.card.model.values {
                             lastCorrectlyCastUnit = top.unit
+
+
+
                         } else {
                             fatalError()
                         }
                     }
+
+
                 }
 
                 // remove this target from the tracked list
@@ -673,6 +715,27 @@ class LevelScene: SKScene {
                 // remove all the overlays
                 castOverlayNode.removeAllChildren()
 
+                let fade = SKAction.fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4)
+
+                if startCardHolder != lastHolder {
+                    self.startCardHolder.fullFillShape?.run(fade)
+                }
+
+                for holder in cardHolderTray.holders {
+                    if holder == lastHolder {
+                        print("lastHolder")
+                        print(holder.position)
+                        holder.lowerFillShape?.run(fade)
+                    } else if holder == currentHolder {
+                        print("currentHolder")
+                        print(holder.position)
+                        holder.upperFillShape?.run(fade)
+                    } else {
+                        holder.upperFillShape?.run(fade)
+                        holder.lowerFillShape?.run(fade)
+                    }
+                }
+
 
                 let text = castGoalLabel.text
 
@@ -682,15 +745,7 @@ class LevelScene: SKScene {
                         self.castGoalLabel.text = "Make areas with matching COLORS have matching WORDS"
                         },
                     .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
-                    .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2),
-                    .wait(forDuration: AnimationDuration.holderFillViewsWait),
-                    .fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4),
-                    .run {
-                        self.castGoalLabel.text = text
-                        },
-                    .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
-                    .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2),
-
+                    .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2)
                 ])
                 castGoalLabel.run(textSeq)
 
@@ -698,56 +753,51 @@ class LevelScene: SKScene {
                     fatalError("hmmm")
                 }
 
-                func randomColor() -> SKColor {
-                    return SKColor(red: CGFloat.random(in: 0..<255) / 255.0,
-                                   green: CGFloat.random(in: 0..<255) / 255.0,
-                                   blue: CGFloat.random(in: 0..<255) / 255.0,
-                                   alpha: 1.0)
-                }
 
-                var lastColor = randomColor()
-                let colorSeq = SKAction.sequence([
-                    .fadeIn(withDuration: AnimationDuration.holderFillViewsFade),
-                    .wait(forDuration: AnimationDuration.holderFillViewsWait),
-                    .fadeOut(withDuration: AnimationDuration.holderFillViewsFade)
-                ])
-                startCardHolder.fullFillShape?.fillColor = lastColor
-                startCardHolder.fullFillShape?.run(colorSeq)
-
-                for (index, cardHolder) in cardHolderTray.holders.enumerated() {
-                    let activeCards = model.castModel.cards.compactMap { $0 }
-                    if index < activeCards.count {
-                        guard case let CardModel.CardValues.two(top, bottom) = activeCards[index].values else {
-                            fatalError("hmmm")
-                        }
-                        cardHolder.lowerFillShape?.fillColor = lastColor
-                        lastColor = randomColor()
-                        cardHolder.upperFillShape?.fillColor = lastColor
-                        cardHolder.lowerFillShape?.run(colorSeq)
-                        cardHolder.upperFillShape?.run(colorSeq)
-
-//                        if let midPoint = lastTopCardMidpoint {
-//                            let bottomCardMidpoint = CGPoint(x: cardHolderTray.position.x + cardHolder.position.x, y: cardHolderTray.position.y + cardHolder.position.y - cardHolder.size.height / 4)
-//                            let path = CGMutablePath()
-//                            path.move(to: midPoint)
-//                            path.addArc(center: midPoint, radius: 20, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: false)
-//                            path.addLine(to: bottomCardMidpoint)
-//                            path.addArc(center: bottomCardMidpoint, radius: 20, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: false)
-//                            path.closeSubpath()
 //
-//                            let shape = SKShapeNode(path: path)
-//                            shape.fillColor = _colorManager.color(for: top.unit)
-//                            shape.strokeColor = _colorManager.color(for: top.unit)
+//                var lastColor = randomColor()
+//                let colorSeq = SKAction.sequence([
+//                    .fadeIn(withDuration: AnimationDuration.holderFillViewsFade),
+//                    .wait(forDuration: AnimationDuration.holderFillViewsWait),
+//                    .fadeOut(withDuration: AnimationDuration.holderFillViewsFade)
+//                ])
+//                startCardHolder.fullFillShape?.fillColor = lastColor
+//                startCardHolder.fullFillShape?.run(colorSeq)
 //
-//                            shape.zPosition = 100000000000
-//                            addChild(shape)
-//                            print(shape)
+//                for (index, cardHolder) in cardHolderTray.holders.enumerated() {
+//                    let activeCards = model.castModel.cards.compactMap { $0 }
+//                    if index < activeCards.count {
+//                        guard case let CardModel.CardValues.two(top, bottom) = activeCards[index].values else {
+//                            fatalError("hmmm")
 //                        }
-//                        lastTopCardMidpoint = CGPoint(x: cardHolderTray.position.x + cardHolder.position.x, y: cardHolderTray.position.y + cardHolder.position.y + cardHolder.size.height / 4)
-                    }
-
-
-                }
+//                        cardHolder.lowerFillShape?.fillColor = lastColor
+//                        lastColor = randomColor()
+//                        cardHolder.upperFillShape?.fillColor = lastColor
+//                        cardHolder.lowerFillShape?.run(colorSeq)
+//                        cardHolder.upperFillShape?.run(colorSeq)
+//
+////                        if let midPoint = lastTopCardMidpoint {
+////                            let bottomCardMidpoint = CGPoint(x: cardHolderTray.position.x + cardHolder.position.x, y: cardHolderTray.position.y + cardHolder.position.y - cardHolder.size.height / 4)
+////                            let path = CGMutablePath()
+////                            path.move(to: midPoint)
+////                            path.addArc(center: midPoint, radius: 20, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: false)
+////                            path.addLine(to: bottomCardMidpoint)
+////                            path.addArc(center: bottomCardMidpoint, radius: 20, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: false)
+////                            path.closeSubpath()
+////
+////                            let shape = SKShapeNode(path: path)
+////                            shape.fillColor = _colorManager.color(for: top.unit)
+////                            shape.strokeColor = _colorManager.color(for: top.unit)
+////
+////                            shape.zPosition = 100000000000
+////                            addChild(shape)
+////                            print(shape)
+////                        }
+////                        lastTopCardMidpoint = CGPoint(x: cardHolderTray.position.x + cardHolder.position.x, y: cardHolderTray.position.y + cardHolder.position.y + cardHolder.size.height / 4)
+//                    }
+//
+//
+//                }
 
                 //exit cast
                 isCasting.toggle()
@@ -767,5 +817,25 @@ class LevelScene: SKScene {
         targetOverlay.zPosition = newMaxZPosition()
         castOverlayNode.addChild(targetOverlay)
         return targetOverlay
+    }
+
+               private func randomColor() -> SKColor {
+                        return SKColor(red: CGFloat.random(in: 0..<255) / 255.0,
+                                       green: CGFloat.random(in: 0..<255) / 255.0,
+                                       blue: CGFloat.random(in: 0..<255) / 255.0,
+                                       alpha: 1.0)
+                    }
+
+    private func _cleanFills() {
+        castGoalLabel.text = "Goal: " + model.endUnit.displayString
+
+        let fade = SKAction.fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4)
+            if self.lastHolder == self.startCardHolder {
+                self.lastHolder.fullFillShape?.run(fade)
+            } else {
+                self.lastHolder.upperFillShape?.run(fade)
+            }
+
+            self.currentHolder.lowerFillShape?.run(fade)
     }
 }
