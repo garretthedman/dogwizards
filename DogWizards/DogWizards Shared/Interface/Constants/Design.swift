@@ -47,5 +47,7 @@ struct Design {
 
     static let backgroundColor = #colorLiteral(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
     static let sceneSize = CGSize(width: 1400, height: 1050)
+
+    static let showSingleUnit = false
 }
 

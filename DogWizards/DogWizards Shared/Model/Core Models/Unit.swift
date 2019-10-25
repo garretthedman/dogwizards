@@ -13,6 +13,8 @@ enum Unit: CaseIterable {
 
     case mouse, pancake, rock, tooth, pizza, kona, dolphin, unicorn, start
 
+    case nm, mm, cm, m, km
+
     var displayString: String {
         switch self {
         case .mouse: return "Mouse"
@@ -24,11 +26,16 @@ enum Unit: CaseIterable {
         case .dolphin: return "Dolphin"
         case .unicorn: return "Unicorn"
         case .start: return "Start"
+        case .nm: return "nm"
+        case .mm: return "mm"
+        case .cm: return "cm"
+        case .m: return "m"
+        case .km: return "km"
         }
     }
     
     var displayStringImage: String{
-        switch self{
+        switch self {
             case .mouse: return "🐁"
             case .pancake: return "🥞"
             case .rock: return "🗿"
@@ -38,6 +45,7 @@ enum Unit: CaseIterable {
             case .dolphin: return "🐬"
             case .unicorn: return "🦄"
             case .start: return "?"
+        default: return "XXXXX"
         }
     }
 }

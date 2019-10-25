@@ -48,17 +48,27 @@ class GameModel {
          CardModel(units: .two(top: randomUnit(), bottom: randomUnit())),
          */
 
+//        let model = LevelModel(startValues: [
+//            CardValue(unit: .start),
+//            CardValue(unit: .pancake),
+//            CardValue(unit: .dolphin),
+//            CardValue(unit: .mouse),
+//            CardValue(unit: .rock)
+//        ], endUnit: .rock, castSize: 3, deck: [
+//            CardModel(values: .two(top: CardValue(unit: .dolphin), bottom: CardValue(unit: .mouse))),
+//            CardModel(values: .two(top: CardValue(unit: .pancake), bottom: CardValue(unit: .rock))),
+//            CardModel(values: .two(top: CardValue(unit: .mouse), bottom: CardValue(unit: .pancake)))
+//        ])
+
         let model = LevelModel(startValues: [
-            CardValue(unit: .start),
-            CardValue(unit: .pancake),
-            CardValue(unit: .dolphin),
-            CardValue(unit: .mouse),
-            CardValue(unit: .rock)
-        ], endUnit: .rock, castSize: 3, deck: [
-            CardModel(values: .two(top: CardValue(unit: .dolphin), bottom: CardValue(unit: .mouse))),
-            CardModel(values: .two(top: CardValue(unit: .pancake), bottom: CardValue(unit: .rock))),
-            CardModel(values: .two(top: CardValue(unit: .mouse), bottom: CardValue(unit: .pancake)))
+            CardValue(unit: .mm, quantity: 100),
+            CardValue(unit: .cm, quantity: 10),
+        ], endUnit: .km, castSize: 3, deck: [
+            CardModel(values: .two(top: CardValue(unit: .mm, quantity: 10), bottom: CardValue(unit: .cm, quantity: 1))),
+            CardModel(values: .two(top: CardValue(unit: .cm, quantity: 100), bottom: CardValue(unit: .m, quantity: 1))),
+            CardModel(values: .two(top: CardValue(unit: .km, quantity: 1), bottom: CardValue(unit: .m, quantity: 1000)))
         ])
+
         levelNumber += 1
 
         state = GameState.level(model)

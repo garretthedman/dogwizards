@@ -35,7 +35,7 @@ class OneUnitCard: Card {
             fatalError("One unit card only supports one value")
         }
 
-        if value.quantity == 1 {
+        if value.quantity == 1 && !Design.showSingleUnit {
             label.text = value.unit.displayString
         } else {
             label.text = value.displayString

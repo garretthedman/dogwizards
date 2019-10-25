@@ -64,13 +64,13 @@ class TwoUnitCard: Card {
             fatalError("Two unit card only supports two values")
         }
 
-        if top.quantity == 1 {
+        if top.quantity == 1 && !Design.showSingleUnit {
             topLabel.text = top.unit.displayString
         } else {
             topLabel.text = top.displayString
         }
 
-        if bottom.quantity == 1 {
+        if bottom.quantity == 1 && !Design.showSingleUnit {
             bottomLabel.text = bottom.unit.displayString
         } else {
             bottomLabel.text = bottom.displayString
@@ -85,11 +85,13 @@ class TwoUnitCard: Card {
             // a normal card
             self.texture = SKTexture(imageNamed: "Card - Two")
         case .incorrectlyCast:
+            break
             // this card was incorrectly cast (unit didn't align with previous card)
-            self.texture = SKTexture(imageNamed: "Card - Two - Red")
+//            self.texture = SKTexture(imageNamed: "Card - Two - Red")
         case .correctlyCast:
+            break
             // this card was correctly cast
-            self.texture = SKTexture(imageNamed: "Card - Two - Green")
+//            self.texture = SKTexture(imageNamed: "Card - Two - Green")
         }
     }
 

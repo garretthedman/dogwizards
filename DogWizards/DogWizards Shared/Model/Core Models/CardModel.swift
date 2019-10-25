@@ -10,8 +10,8 @@ import Foundation
 
 struct CardValue {
     let unit: Unit
-    let quantity: CGFloat
-    init(unit: Unit, quantity: CGFloat = 1) {
+    let quantity: Int
+    init(unit: Unit, quantity: Int = 1) {
         self.unit = unit
         self.quantity = quantity
     }
