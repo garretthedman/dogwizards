@@ -10,14 +10,22 @@ import Foundation
 
 struct CardValue {
     let unit: Unit
-    let quantity: Int
-    init(unit: Unit, quantity: Int = 1) {
+    let quantity: CGFloat
+    init(unit: Unit, quantity: CGFloat = 1) {
         self.unit = unit
         self.quantity = quantity
     }
 
     var displayString: String {
-        return quantity.description + " " + unit.displayString
+        let quantityString: String
+        if Design.showSingleUnit {
+            quantityString = quantity.description + " "
+        } else if quantity != 1 {
+            quantityString = quantity.description + " "
+        } else {
+            quantityString = ""
+        }
+        return quantityString + unit.displayStringImage
     }
 }
 

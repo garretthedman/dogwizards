@@ -19,10 +19,12 @@ class CastModel {
 
     /// Enum for communicating how the cast was updated
     enum Update {
-        case shift, castResult(Unit?)
+        case shift, castResult(CardValue?)
     }
 
     // MARK: - Properties
+
+    private var quantity: CGFloat
 
     /// the current start unit of the cast
     var startValue: CardValue
@@ -40,7 +42,8 @@ class CastModel {
     init(startValue: CardValue, endUnit: Unit, size: Int) {
         self.startValue = startValue
         self.endUnit = endUnit
-        cards = [CardModel?](repeating: nil, count: size)
+        self.cards = [CardModel?](repeating: nil, count: size)
+        self.quantity = startValue.quantity
     }
 
     // MARK: - Helpers
@@ -56,6 +59,7 @@ class CastModel {
     func resetCardCastStates() {
         didUpdate?(.castResult(nil))
         cards.forEach { $0?.castState = CardModel.CastState.uncasted }
+        quantity = startValue.quantity
     }
 
     /// returns if this is the next card to be casted
@@ -101,6 +105,7 @@ class CastModel {
 
     /// cast the card at the specified index in the cast model
     func cast(at index: Int) {
+        print(#function)
         // make sure we can cast this card
         guard let castCard = cards[index], let castState = potentialCastResult(at: index) else { return }
         castCard.castState = castState
@@ -114,9 +119,11 @@ class CastModel {
 
         switch lastCorrectCardValues {
         case .one(let value):
-            didUpdate?(.castResult(value.unit))
-        case .two(let top, _):
-            didUpdate?(.castResult(top.unit))
+            quantity = quantity * value.quantity
+            didUpdate?(.castResult(CardValue(unit: value.unit, quantity: quantity)))
+        case .two(let top, let bottom):
+            quantity = quantity * top.quantity / bottom.quantity
+            didUpdate?(.castResult(CardValue(unit: top.unit, quantity: quantity)))
         }
     }
     

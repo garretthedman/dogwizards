@@ -74,6 +74,7 @@
 		1409CAE7228DC87900348942 /* GameModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
 		1409CAE8228DC87900348942 /* PickCardModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickCardModel.swift; sourceTree = "<group>"; };
 		1409CAE9228DC87900348942 /* TutorialModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialModel.swift; sourceTree = "<group>"; };
+		14371469236B8EB000895E36 /* DogWizards.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DogWizards.entitlements; sourceTree = "<group>"; };
 		14393DCF22662C03008A87EF /* LevelScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelScene.swift; sourceTree = "<group>"; };
 		14393DD022662C04008A87EF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		14393DD522662C04008A87EF /* DogWizards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DogWizards.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,6 +198,7 @@
 		14393DD722662C04008A87EF /* DogWizards iOS */ = {
 			isa = PBXGroup;
 			children = (
+				14371469236B8EB000895E36 /* DogWizards.entitlements */,
 				14393DD822662C04008A87EF /* AppDelegate.swift */,
 				14393DDA22662C04008A87EF /* GameViewController.swift */,
 				14393DDF22662C04008A87EF /* LaunchScreen.storyboard */,
@@ -607,9 +609,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "DogWizards iOS/DogWizards.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UAB6F8R42P;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = 72S993BNAV;
 				INFOPLIST_FILE = "DogWizards iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -619,6 +623,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.andrewfinke.DogWizards;
 				PRODUCT_NAME = DogWizards;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -628,8 +633,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "DogWizards iOS/DogWizards.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = UAB6F8R42P;
 				INFOPLIST_FILE = "DogWizards iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
@@ -640,6 +647,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.andrewfinke.DogWizards;
 				PRODUCT_NAME = DogWizards;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

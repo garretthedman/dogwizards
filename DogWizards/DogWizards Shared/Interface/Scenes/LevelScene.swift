@@ -316,7 +316,7 @@ class LevelScene: SKScene {
         case .castResult(let result):
             // a new cast result was created
 
-            let text = result?.displayStringImage ?? "?"
+            let text = result?.displayString ?? "?"
             let isDiff = castResultLabel.text != text
 
             if isCasting && isDiff {
@@ -405,6 +405,8 @@ class LevelScene: SKScene {
             for (index, button) in startUnitButtons.enumerated() {
                 if button.frame.contains(adjustedLocation) {
 
+                    model.castModel.resetCardCastStates()
+                    
                     // get the unit at that index
                     let startValue = model.startValues[index+1]
                     // update the cast model
@@ -412,7 +414,7 @@ class LevelScene: SKScene {
                     // update the card model
                     startCard.model.values = .one(startValue)
                     // update the goal image
-                    modelUpdated(update: .castResult(model.castModel.startValue.unit))
+                    modelUpdated(update: .castResult(model.castModel.startValue))
                     // trigger a ui update
                     startCard.updateLabels()
                     // hide the start unit option buttons
@@ -596,7 +598,7 @@ class LevelScene: SKScene {
                         // remove this target
                         castTargets.removeFirst()
                         // manually trigger an interface update to this result
-                        modelUpdated(update: .castResult(model.castModel.startValue.unit))
+                        modelUpdated(update: .castResult(model.castModel.startValue))
 
                         lastCorrectlyCastUnit = model.castModel.startValue.unit
                     }
