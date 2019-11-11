@@ -69,7 +69,6 @@ class LevelScene: SKScene {
     private let model: LevelModel
 
     private let colors: [SKColor] = [
-        .red,
         .orange,
         .yellow,
         .green,
@@ -642,7 +641,17 @@ class LevelScene: SKScene {
 
                     if castResult == .incorrectlyCast {
                         if case .two(let top, let bottom) = target.card.model.values, let lastCorrectlyCastUnit = lastCorrectlyCastUnit {
-                            let text = castGoalLabel.text
+                             let text = "Make sure the last unit matches the goal \(model.castModel.endUnit.displayString)"
+
+                            let textSeq = SKAction.sequence([
+                                .fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4),
+                                .run {
+                                    self.castGoalLabel.text = text
+                                },
+                                .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
+                                .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2)
+                            ])
+                            castGoalLabel.run(textSeq)
                         } else {
                             fatalError()
                         }
@@ -701,15 +710,20 @@ class LevelScene: SKScene {
                     }
                 }
 
-                let textSeq = SKAction.sequence([
-                    .fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4),
-                    .run {
-                        self.castGoalLabel.text = "Make areas with matching COLORS have matching WORDS"
-                    },
-                    .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
-                    .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2)
-                ])
-                castGoalLabel.run(textSeq)
+                if lastHolder == currentHolder {
+                    // this is bad and deserves a better solution, but I don't have time right now.
+                    let text = "Make sure the last unit matches the goal \(model.castModel.endUnit.displayString)"
+                    
+                    let textSeq = SKAction.sequence([
+                        .fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4),
+                        .run {
+                            self.castGoalLabel.text = text
+                        },
+                        .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
+                        .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2)
+                    ])
+                    castGoalLabel.run(textSeq)
+                }
 
                 //exit cast
                 isCasting.toggle()
