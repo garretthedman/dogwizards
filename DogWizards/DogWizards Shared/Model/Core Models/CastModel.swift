@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreGraphics
 
 enum Direction {
     case left, right
@@ -71,6 +72,11 @@ class CastModel {
         }
 
         return true
+    }
+
+    func isLastInChain(at index: Int) -> Bool {
+        let flattenCards = cards.compactMap { $0 }
+        return index == flattenCards.count - 1
     }
 
     /// returns what the cast result would be for the card at the specified index

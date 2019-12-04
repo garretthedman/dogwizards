@@ -43,8 +43,12 @@ class LevelScene: SKScene {
 
     /// Top label indicating current cast result
     private let castResultLabel = SKLabelNode(text: "X")
+
     /// Goal label
     private let castGoalLabel = SKLabelNode(text: "")
+
+    private let castGoalLabelBackgroundNode = SKShapeNode(rect: CGRect(x: 0, y: 0, width: 400, height: 40), cornerRadius: 10)
+
     /// Node which contains all the overlays from the cast targets
     private let castOverlayNode = SKNode()
 
@@ -55,7 +59,13 @@ class LevelScene: SKScene {
 
     /// All the background images for the game
     let streetBackground = SKSpriteNode()
-    
+
+    let feedbackBackgroundSprite = SKShapeNode(rect: CGRect(x: 0, y: 0, width: 100, height: 40), cornerRadius: 10)
+    let feedbackLabel = SKLabelNode()
+
+    var performBackground: SKShapeNode?
+    var hmmBackground: SKShapeNode?
+
     // MARK: - Gesture Tracking
 
     /// Used to track the cards the user is panning accross the screen
@@ -85,9 +95,10 @@ class LevelScene: SKScene {
             panGestureRecognizerData = [:]
             // Update the button label
             if (isCasting){
+                castButton.label.text = "Stop"
+//                castButton.label.fontColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+            } else {
                 castButton.label.text = "Perform!"
-                castButton.label.fontColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
-            }else{
                 castButton.label.fontColor = .black
             }
             //castButton.label.text = isCasting ? "X" : "PERFORM"
@@ -100,6 +111,9 @@ class LevelScene: SKScene {
                     card.run(.fadeAlpha(to: alpha, duration: 0.2))
                 }
             }
+
+            hmmBackground?.run(.fadeAlpha(to: alpha, duration: 0.2))
+//            backgroundColor = Design.backgroundColor.withAlphaComponent(alpha)
 
             if !isCasting {
                 model.castModel.resetCardCastStates()
@@ -119,6 +133,16 @@ class LevelScene: SKScene {
     }
 
     var lastCorrectlyCastUnit: Unit?
+
+    private let wiggleAction = SKAction.sequence([
+        .repeat(.sequence([
+            .rotate(toAngle: CGFloat.pi / 16, duration: 0.1),
+            .rotate(toAngle: -CGFloat.pi / 16, duration: 0.1)]), count: 2),
+        .rotate(toAngle: 0.0, duration: 0.1)
+    ])
+
+    let overlayNode = SKNode()
+    var isInFalsePathMode = false
 
     // MARK: - Initialization
 
@@ -143,7 +167,39 @@ class LevelScene: SKScene {
         streetBackground.position = CGPoint(x: Design.sceneSize.width/2, y: Design.sceneSize.height/1.2)
         streetBackground.size = CGSize(width: 560, height: 249)
         addChild(streetBackground)
-        
+
+
+        feedbackLabel.text = "MATCH"
+        feedbackLabel.fontColor = .white
+        feedbackLabel.fontSize = 20
+        feedbackLabel.fontName = "AvenirNext-Medium"
+
+        feedbackBackgroundSprite.addChild(feedbackLabel)
+        feedbackBackgroundSprite.fillColor = .blue
+
+        feedbackBackgroundSprite.alpha = 0
+        feedbackBackgroundSprite.position = CGPoint(x: 200, y: 200)
+        feedbackLabel.position = CGPoint(x: feedbackBackgroundSprite.frame.width / 2, y: feedbackBackgroundSprite.frame.height / 4)
+        addChild(feedbackBackgroundSprite)
+
+        let performBackground = SKShapeNode(rect: CGRect(x: 0, y: 0, width: cardHolderTray.frame.width + startCard.frame.width + 100, height: frame.height / 2 + 100), cornerRadius: 30)
+        performBackground.fillColor = Design.backgroundColor
+        performBackground.strokeColor = .clear
+        performBackground.position = CGPoint(x: frame.width / 2 - performBackground.frame.width / 2, y: frame.height / 2 - 100)
+        performBackground.zPosition = -1
+        addChild(performBackground)
+        self.performBackground = performBackground
+
+
+        let hmmBackground = SKShapeNode(rect: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
+        hmmBackground.fillColor = Design.backgroundColor
+        hmmBackground.strokeColor = .clear
+        hmmBackground.position = CGPoint(x: frame.width / 2 - hmmBackground.frame.width / 2, y: frame.height / 2  - hmmBackground.frame.height / 2)
+        hmmBackground.zPosition = -2
+        addChild(hmmBackground)
+        self.hmmBackground = hmmBackground
+
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -153,7 +209,9 @@ class LevelScene: SKScene {
     // MARK: - Scene Configuration
 
     override func didMove(to view: SKView) {
-        run(SKAction.sequence([.fadeOut(withDuration: 0), .wait(forDuration: 0.25), .fadeIn(withDuration: 1.0)]))
+        run(SKAction.sequence([.fadeOut(withDuration: 0), .wait(forDuration: 0.25), .fadeIn(withDuration: 1.0), .run {
+            self.backgroundColor = .clear
+            }]))
         configureCardHolderTray()
         configureCards()
 
@@ -179,6 +237,11 @@ class LevelScene: SKScene {
         castResultLabel.position = CGPoint(x: size.width / 2,
                                            y: cardHolderTray.position.y + cardHolderTray.size.height+130)
         addChild(castResultLabel)
+
+
+        castGoalLabelBackgroundNode.position = CGPoint(x: size.width / 2 - castGoalLabelBackgroundNode.frame.width / 2,
+                                                       y: cardHolderTray.position.y + cardHolderTray.size.height+castGoalLabelBackgroundNode.frame.height - 10)
+        addChild(castGoalLabelBackgroundNode)
 
         // position goal label under result label
         castGoalLabel.text = "Goal: " + model.endUnit.displayString
@@ -222,6 +285,26 @@ class LevelScene: SKScene {
             }
         }
         addChild(castOverlayNode)
+
+
+
+        let bla = Design.cardHolderSizeWidth + Design.cardHolderPaddingSize
+
+        for (index, _) in cardHolderTray.holders.enumerated() {
+            let diagonal = SKSpriteNode(texture: SKTexture(imageNamed: "LineDiagonal"), size: CGSize(width: Design.cardHolderSizeWidth + Design.cardHolderPaddingSize, height: 53.7 * 1.5))
+            diagonal.position = CGPoint(x: bla / 2 + bla * CGFloat(index), y: 0)
+            overlayNode.addChild(diagonal)
+
+            let straight = SKSpriteNode(texture: SKTexture(imageNamed: "LineStraight"), size: CGSize(width: 11.7 * 1.5, height: 53.7 * 1.5))
+            straight.position = CGPoint(x: bla + bla * CGFloat(index), y: 0)
+            overlayNode.addChild(straight)
+        }
+
+        addChild(overlayNode)
+
+        overlayNode.alpha = 0.0
+        overlayNode.position = CGPoint(x: startCard.position.x, y: startCard.position.y)
+        overlayNode.zPosition = 1000000
     }
 
     /// one time setup of the card sprites
@@ -379,14 +462,16 @@ class LevelScene: SKScene {
                 card.model.flip()
                 return
             }
-        } else if castButton.frame.contains(adjustedLocation) {
+        } else if castButton.frame.contains(adjustedLocation) || (!(performBackground?.frame.contains(adjustedLocation) ?? true) && isCasting) {
             // The tap was on the cast button
-
-            // inform the cast model to shift the cards
-            model.castModel.prepareForCast()
 
             // toggle the casting mode state
             isCasting.toggle()
+
+            if isCasting {
+                // inform the cast model to shift the cards
+                model.castModel.prepareForCast()
+            }
 
             // hide start card options
             isShowingStartUnitOptions = false
@@ -590,9 +675,8 @@ class LevelScene: SKScene {
 
                         lastHolder = startCardHolder
                         currentHolder = startCardHolder
+                        isInFalsePathMode = false
 
-                        startCardHolder.fullFillShape?.fillColor = colors[0]
-                        startCardHolder.fullFillShape?.alpha = 1.0
 
                         // remove this target
                         castTargets.removeFirst()
@@ -618,40 +702,23 @@ class LevelScene: SKScene {
 
                     if target.card.model.castState == .incorrectlyCast {
                         // run the bad animation
-                        let wiggleAction = SKAction.sequence([
-                            .repeat(.sequence([
-                                .rotate(toAngle: CGFloat.pi / 16, duration: 0.1),
-                                .rotate(toAngle: -CGFloat.pi / 16, duration: 0.1)]), count: 2),
-                            .rotate(toAngle: 0.0, duration: 0.1)
-                        ])
                         target.card.run(wiggleAction)
+                        gestureRecognizer.isEnabled = false
+                        __gestureRecognizerEnded()
+                        gestureRecognizer.isEnabled = true
                     } else {
                         lastHolder = currentHolder
                     }
 
-                    if model.castModel.cards.compactMap({ $0 }).count != index + 1 {
-                        holder.upperFillShape?.fillColor = colors[(index + 1) % colors.count]
-                        holder.upperFillShape?.alpha = 1.0
-                    }
                 } else if let castResult = model.castModel.potentialCastResult(at: index) {
                     // not the final target for this card, but get what the cast result of the full card will be
 
-                    holder.lowerFillShape?.fillColor = colors[index % colors.count]
-                    holder.lowerFillShape?.alpha = 1.0
-
                     if castResult == .incorrectlyCast {
                         if case .two(let top, let bottom) = target.card.model.values, let lastCorrectlyCastUnit = lastCorrectlyCastUnit {
-                             let text = "Make sure the last unit matches the goal \(model.castModel.endUnit.displayString)"
-
-                            let textSeq = SKAction.sequence([
-                                .fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4),
-                                .run {
-                                    self.castGoalLabel.text = text
-                                },
-                                .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
-                                .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2)
-                            ])
-                            castGoalLabel.run(textSeq)
+                            target.card.run(wiggleAction)
+                             gestureRecognizer.isEnabled = false
+                            __gestureRecognizerEnded()
+                            gestureRecognizer.isEnabled = true
                         } else {
                             fatalError()
                         }
@@ -666,72 +733,95 @@ class LevelScene: SKScene {
 
                 // remove this target from the tracked list
                 castTargets.removeFirst()
+            } else if castTargets.count > 1 {
+                let target = castTargets[1]
+                if target.frame.contains(adjustedLocation) {
+                    overlayNode.run(.fadeIn(withDuration: 0.5))
+                    target.card.run(wiggleAction)
+                    gestureRecognizer.isEnabled = false
+                    isInFalsePathMode = true
+                    __gestureRecognizerEnded()
+                    gestureRecognizer.isEnabled = true
+                } else {
+                    update(goalText: "Goal: " + model.endUnit.displayString, animated: false)
+                }
             }
         case .ended:
-            if model.checkForCompletion() {
-                Logging.shared.log(event: .spellsZagged, description: "correct cast")
-                func addEmitter(position: CGPoint) {
-                    guard let emitter = SKEmitterNode(fileNamed: "MyParticle.sks") else {
-                        fatalError()
-                    }
-                    emitter.position = position
-                    emitter.zPosition = 10000
-                    addChild(emitter)
-                }
-                let fade = SKAction.sequence([.wait(forDuration: 0.5), .fadeOut(withDuration: 1.0)])
-                for card in cards where model.castModel.cards.contains(card.model) {
-                    addEmitter(position: card.position)
-                    card.run(fade)
-                }
-                addEmitter(position: startCard.position)
-                startCard.run(fade)
-                isUserInteractionEnabled = false
+            __gestureRecognizerEnded()
+        default:
+            break
+        }
+    }
 
-                self.run(SKAction.sequence([.wait(forDuration: 2.0), .fadeOut(withDuration: 1.0)]))
-            } else {
+    private func __gestureRecognizerEnded() {
+        if model.checkForCompletion() {
+            Logging.shared.log(event: .spellsZagged, description: "correct cast")
+            func addEmitter(position: CGPoint) {
+                guard let emitter = SKEmitterNode(fileNamed: "MyParticle.sks") else {
+                    fatalError()
+                }
+                emitter.position = position
+                emitter.zPosition = 10000
+                addChild(emitter)
+            }
+            let fade = SKAction.sequence([.wait(forDuration: 0.5), .fadeOut(withDuration: 1.0)])
+            for card in cards where model.castModel.cards.contains(card.model) {
+                addEmitter(position: card.position)
+                card.run(fade)
+            }
+            addEmitter(position: startCard.position)
+            startCard.run(fade)
+            isUserInteractionEnabled = false
+
+            self.run(SKAction.sequence([.wait(forDuration: 2.0), .fadeOut(withDuration: 1.0)]))
+        } else {
+            let currentPointMyBrainHurts = convert(currentHolder.position, from: currentHolder.parent!)
+            let everythingIsTerrible = convert(lastHolder.position, from: lastHolder.parent!)
+
+            let midpoint = CGPoint(x: (currentPointMyBrainHurts.x + everythingIsTerrible.x) / 2 - feedbackBackgroundSprite.frame.width / 2, y: (currentPointMyBrainHurts.y + everythingIsTerrible.y) / 2 - feedbackBackgroundSprite.frame.height / 2)
+
+
+            feedbackBackgroundSprite.zPosition = overlayNode.zPosition + 1
+
+            if !isInFalsePathMode {
                 Logging.shared.log(event: .spellsZagged, description: "incorrect Cast")
                 // remove all the overlays
                 castOverlayNode.removeAllChildren()
 
-                let fade = SKAction.fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4)
-
-                if startCardHolder != lastHolder {
-                    self.startCardHolder.fullFillShape?.run(fade)
+                let matchColor = SKColor.blue.withAlphaComponent(0.2)
+                if startCardHolder == lastHolder {
+                    startCardHolder.fullFillShape?.fillColor = matchColor
+                    startCardHolder.fullFillShape?.alpha = 1.0
+                } else {
+                    lastHolder.upperFillShape?.alpha = 1.0
+                    lastHolder.upperFillShape?.fillColor = matchColor
                 }
+                feedbackBackgroundSprite.fillColor = .blue
 
-                for holder in cardHolderTray.holders {
-                    if holder == lastHolder {
-                        holder.lowerFillShape?.run(fade)
-                    } else if holder == currentHolder {
-                        holder.upperFillShape?.run(fade)
-                    } else {
-                        holder.upperFillShape?.run(fade)
-                        holder.lowerFillShape?.run(fade)
-                    }
-                }
-
+                // hits this case if the case failed, but got to final unit
                 if lastHolder == currentHolder {
+                    castGoalLabelBackgroundNode.alpha = 1.0
+                    castGoalLabelBackgroundNode.fillColor = matchColor
                     // this is bad and deserves a better solution, but I don't have time right now.
-                    let text = "Make sure the last unit matches the goal \(model.castModel.endUnit.displayString)"
-                    
-                    let textSeq = SKAction.sequence([
-                        .fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4),
-                        .run {
-                            self.castGoalLabel.text = text
-                        },
-                        .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
-                        .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2)
-                    ])
-                    castGoalLabel.run(textSeq)
-                }
 
-                //exit cast
-                isCasting.toggle()
-                // clear the cast states
-                model.castModel.resetCardCastStates()
+                } else {
+                    currentHolder.lowerFillShape?.alpha = 1.0
+                    currentHolder.lowerFillShape?.fillColor = matchColor
+                }
+                feedbackLabel.text = "MATCH"
+                feedbackBackgroundSprite.alpha = 1
+                feedbackBackgroundSprite.position = midpoint
+            } else {
+                feedbackLabel.text = "TRACE"
+                feedbackBackgroundSprite.fillColor = .red
+                feedbackBackgroundSprite.alpha = 1
+                feedbackBackgroundSprite.position = CGPoint(x: startCard.position.x - feedbackBackgroundSprite.frame.width / 2, y: startCard.position.y + feedbackBackgroundSprite.frame.height / 2)
             }
-        default:
-            break
+
+            //exit cast
+            isCasting.toggle()
+            // clear the cast states
+            model.castModel.resetCardCastStates()
         }
     }
 
@@ -754,5 +844,25 @@ class LevelScene: SKScene {
             lastHolder.upperFillShape?.run(fade)
         }
         currentHolder.lowerFillShape?.run(fade)
+        castGoalLabelBackgroundNode.run(fade)
+        overlayNode.run(fade)
+        feedbackBackgroundSprite.run(fade)
+    }
+
+    private func update(goalText text: String, animated: Bool) {
+        guard text != castGoalLabel.text else { return }
+        if animated {
+            let textSeq = SKAction.sequence([
+                .fadeOut(withDuration: AnimationDuration.holderFillViewsFade / 4),
+                .run {
+                    self.castGoalLabel.text = text
+                },
+                .wait(forDuration: AnimationDuration.holderFillViewsFade / 4),
+                .fadeIn(withDuration: AnimationDuration.holderFillViewsFade / 2)
+            ])
+            castGoalLabel.run(textSeq)
+        } else {
+            castGoalLabel.text = text
+        }
     }
 }
