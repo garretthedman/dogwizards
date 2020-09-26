@@ -16,6 +16,6 @@ struct AnimationDuration {
     static let cardMoveToHolder = TimeInterval(0.2)
     static let startButtonMove = TimeInterval(0.15)
 
-    static let holderFillViewsFade = TimeInterval(0.5)
-    static let holderFillViewsWait = TimeInterval(4)
+    static let holderFillViewsFade = TimeInterval(0.2)
+    static let holderFillViewsWait = TimeInterval(1)
 }

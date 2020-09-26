@@ -45,6 +45,13 @@ enum Unit: CaseIterable {
             case .dolphin: return "🐬"
             case .unicorn: return "🦄"
             case .start: return "?"
+            
+            case .mm: return "mm"
+            case .cm: return "cm"
+            case .km: return "km"
+            case .m: return "m"
+            case .nm: return "nm"
+            
         default: return "XXXXX"
         }
     }

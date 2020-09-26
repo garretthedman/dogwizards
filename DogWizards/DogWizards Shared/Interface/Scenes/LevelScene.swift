@@ -164,7 +164,7 @@ class LevelScene: SKScene {
         
         // add images for the background
         streetBackground.texture = SKTexture(imageNamed: "rockBack")
-        streetBackground.position = CGPoint(x: Design.sceneSize.width/2, y: Design.sceneSize.height/1.2)
+        streetBackground.position = CGPoint(x: Design.sceneSize.width/2, y: Design.sceneSize.height/1.2+60)
         streetBackground.size = CGSize(width: 560, height: 249)
         addChild(streetBackground)
 
