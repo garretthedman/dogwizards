@@ -20,7 +20,7 @@ class CastModel {
 
     /// Enum for communicating how the cast was updated
     enum Update {
-        case shift, castResult(CardValue?)
+        case shift, castResult(Measurement?)
     }
 
     // MARK: - Properties
@@ -28,7 +28,7 @@ class CastModel {
     private var quantity: CGFloat
 
     /// the current start unit of the cast
-    var startValue: CardValue
+    var startMeasurement: Measurement
     
     let endUnit: Unit
     
@@ -40,8 +40,8 @@ class CastModel {
 
     // MARK: - Initialization
 
-    init(startValue: CardValue, endUnit: Unit, size: Int) {
-        self.startValue = startValue
+    init(startValue: Measurement, endUnit: Unit, size: Int) {
+        self.startMeasurement = startValue
         self.endUnit = endUnit
         self.cards = [CardModel?](repeating: nil, count: size)
         self.quantity = startValue.quantity
@@ -60,7 +60,7 @@ class CastModel {
     func resetCardCastStates() {
         didUpdate?(.castResult(nil))
         cards.forEach { $0?.castState = CardModel.CastState.uncasted }
-        quantity = startValue.quantity
+        quantity = startMeasurement.quantity
     }
 
     /// returns if this is the next card to be casted
@@ -85,7 +85,7 @@ class CastModel {
         let previousUnit: Unit
         if index == 0 {
             // if this is the first card, then the previous unit was the start unit
-            previousUnit = startValue.unit
+            previousUnit = startMeasurement.unit
         } else {
             // get the previous card's unit
             guard let previousCastCard = cards[index - 1] else { return nil }
@@ -126,10 +126,10 @@ class CastModel {
         switch lastCorrectCardValues {
         case .one(let value):
             quantity = quantity * value.quantity
-            didUpdate?(.castResult(CardValue(unit: value.unit, quantity: quantity)))
+            didUpdate?(.castResult(Measurement(unit: value.unit, quantity: quantity)))
         case .two(let top, let bottom):
             quantity = quantity * top.quantity / bottom.quantity
-            didUpdate?(.castResult(CardValue(unit: top.unit, quantity: quantity)))
+            didUpdate?(.castResult(Measurement(unit: top.unit, quantity: quantity)))
         }
     }
     

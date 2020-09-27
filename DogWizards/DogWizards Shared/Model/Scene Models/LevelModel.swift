@@ -14,7 +14,7 @@ class LevelModel {
     // MARK: - Properties
 
     /// The possible values a user has to choose from
-    let startValues: [CardValue]
+    let startValues: [Measurement]
     /// The end unit a user is building toward
     let endUnit: Unit
     /// All the cards the user has
@@ -31,7 +31,7 @@ class LevelModel {
     
     // MARK: - Initialization
     
-    init(startValues: [CardValue], endUnit: Unit, castSize: Int, deck: [CardModel]) {
+    init(startValues: [Measurement], endUnit: Unit, castSize: Int, deck: [CardModel]) {
         // make sure we have at least one start unit and set that as the current
         guard let startValue = startValues.first else { fatalError() }
         self.startValues = startValues
@@ -44,7 +44,7 @@ class LevelModel {
         if castModel.isCastSuccessful() {
             // castModel.resetCardCastStates()
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                self.didUpdate?(.completed(start: self.castModel.startValue.unit,
+                self.didUpdate?(.completed(start: self.castModel.startMeasurement.unit,
                                            end: self.castModel.endUnit))
             }
             return true

@@ -27,7 +27,7 @@ class Logging {
         formatter.calendar = Calendar(identifier: .gregorian)
         return formatter
     }()
-
+    
     private let fileURL: URL = {
         guard let documentDirectory = try? FileManager.default.url(for: .documentDirectory,
                                                                    in: .userDomainMask,

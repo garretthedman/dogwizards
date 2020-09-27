@@ -85,6 +85,7 @@ class LevelScene: SKScene {
         .blue,
         .magenta
     ]
+    
     private var lastHolder: CardHolder
     private var currentHolder: CardHolder
 
@@ -152,7 +153,7 @@ class LevelScene: SKScene {
         // create a tray that can hold the max amount of cards supported in this level's cast
         cardHolderTray = CardHolderTray(holderCount: model.castModel.cards.count)
         // create the far left card indicating the start unit
-        startCard = OneUnitCard(model: CardModel(values: .one(model.castModel.startValue)))
+        startCard = OneUnitCard(model: CardModel(values: .one(model.castModel.startMeasurement)))
         startCardHolder = CardHolder()
         lastHolder = startCardHolder
         currentHolder = startCardHolder
@@ -198,8 +199,6 @@ class LevelScene: SKScene {
         hmmBackground.zPosition = -2
         addChild(hmmBackground)
         self.hmmBackground = hmmBackground
-
-
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -494,11 +493,11 @@ class LevelScene: SKScene {
                     // get the unit at that index
                     let startValue = model.startValues[index+1]
                     // update the cast model
-                    model.castModel.startValue = startValue
+                    model.castModel.startMeasurement = startValue
                     // update the card model
                     startCard.model.values = .one(startValue)
                     // update the goal image
-                    modelUpdated(update: .castResult(model.castModel.startValue))
+                    modelUpdated(update: .castResult(model.castModel.startMeasurement))
                     // trigger a ui update
                     startCard.updateLabels()
                     // hide the start unit option buttons
@@ -681,9 +680,9 @@ class LevelScene: SKScene {
                         // remove this target
                         castTargets.removeFirst()
                         // manually trigger an interface update to this result
-                        modelUpdated(update: .castResult(model.castModel.startValue))
+                        modelUpdated(update: .castResult(model.castModel.startMeasurement))
 
-                        lastCorrectlyCastUnit = model.castModel.startValue.unit
+                        lastCorrectlyCastUnit = model.castModel.startMeasurement.unit
                     }
                     return
                 }

@@ -49,11 +49,11 @@ class GameModel {
          */
 
         let model = LevelModel(startValues: [
-            CardValue(unit: .start),
-            CardValue(unit: .pancake),
-            CardValue(unit: .rock)
+            Measurement(unit: .start),
+            Measurement(unit: .pancake),
+            Measurement(unit: .rock)
         ], endUnit: .rock, castSize: 1, deck: [
-            CardModel(values: .two(top: CardValue(unit: .rock), bottom: CardValue(unit: .pancake)))
+            CardModel(values: .two(top: Measurement(unit: .rock), bottom: Measurement(unit: .pancake)))
         ])
 
         levelNumber += 1
@@ -71,11 +71,11 @@ class GameModel {
 
             if levelNumber == 1 {
                 let nextLevel = LevelModel(startValues: [
-                    CardValue(unit: .start),
-                    CardValue(unit: .pancake),
-                    CardValue(unit: .rock),
+                    Measurement(unit: .start),
+                    Measurement(unit: .pancake),
+                    Measurement(unit: .rock),
                     ], endUnit: .rock, castSize: 1, deck: [
-                        CardModel(values: .two(top: CardValue(unit: .pancake), bottom: CardValue(unit: .rock))),
+                        CardModel(values: .two(top: Measurement(unit: .pancake), bottom: Measurement(unit: .rock))),
                 ])
                 state = GameState.level(nextLevel)
                 nextLevel.didUpdate = levelUpdated(update:)
@@ -84,13 +84,13 @@ class GameModel {
 
             else if levelNumber == 2 {
                 let nextLevel = LevelModel(startValues: [
-                    CardValue(unit: .start),
-                    CardValue(unit: .mouse),
-                    CardValue(unit: .dolphin),
-                    CardValue(unit: .rock)
+                    Measurement(unit: .start),
+                    Measurement(unit: .mouse),
+                    Measurement(unit: .dolphin),
+                    Measurement(unit: .rock)
                     ], endUnit: .rock, castSize: 2, deck: [
-                        CardModel(values: .two(top: CardValue(unit: .dolphin), bottom: CardValue(unit: .mouse))),
-                        CardModel(values: .two(top: CardValue(unit: .mouse), bottom: CardValue(unit: .rock)))
+                        CardModel(values: .two(top: Measurement(unit: .dolphin), bottom: Measurement(unit: .mouse))),
+                        CardModel(values: .two(top: Measurement(unit: .mouse), bottom: Measurement(unit: .rock)))
                 ])
                 state = GameState.level(nextLevel)
                 nextLevel.didUpdate = levelUpdated(update:)
@@ -99,15 +99,15 @@ class GameModel {
             
         else if levelNumber == 3 {
             let nextLevel = LevelModel (startValues: [
-                CardValue(unit: .start),
-                CardValue(unit: .pancake),
-                CardValue(unit: .unicorn),
-                CardValue(unit: .pizza)],
+                Measurement(unit: .start),
+                Measurement(unit: .pancake),
+                Measurement(unit: .unicorn),
+                Measurement(unit: .pizza)],
                 endUnit: .rock, castSize: 4, deck: [
-                    CardModel(values: .two(top: CardValue(unit: .pancake), bottom: CardValue(unit: .rock))),
-               CardModel(values: .two(top: CardValue(unit: .pancake), bottom: CardValue(unit: .unicorn))),
-                CardModel(values: .two(top: CardValue(unit: .pizza), bottom: CardValue(unit: .unicorn))),
-                CardModel(values: .two(top: CardValue(unit: .unicorn), bottom: CardValue(unit: .pizza)))
+                    CardModel(values: .two(top: Measurement(unit: .pancake), bottom: Measurement(unit: .rock))),
+               CardModel(values: .two(top: Measurement(unit: .pancake), bottom: Measurement(unit: .unicorn))),
+                CardModel(values: .two(top: Measurement(unit: .pizza), bottom: Measurement(unit: .unicorn))),
+                CardModel(values: .two(top: Measurement(unit: .unicorn), bottom: Measurement(unit: .pizza)))
                 ])
                 state = GameState.level(nextLevel)
                 nextLevel.didUpdate = levelUpdated(update:)
@@ -116,20 +116,20 @@ class GameModel {
             
             else if levelNumber == 4 {
                 let nextLevel = LevelModel(startValues: [
-                    CardValue(unit: .start),
-                    CardValue(unit: .mouse),
-                    CardValue(unit: .dolphin),
-                    CardValue(unit: .pizza),
-                    CardValue(unit: .unicorn),
-                    CardValue(unit: .pancake),
-                    CardValue(unit: .rock)
+                    Measurement(unit: .start),
+                    Measurement(unit: .mouse),
+                    Measurement(unit: .dolphin),
+                    Measurement(unit: .pizza),
+                    Measurement(unit: .unicorn),
+                    Measurement(unit: .pancake),
+                    Measurement(unit: .rock)
                     ], endUnit: .rock, castSize: 6, deck: [
-                        CardModel(values: .two(top: CardValue(unit: .unicorn), bottom: CardValue(unit: .rock))),
-                        CardModel(values: .two(top: CardValue(unit: .pizza), bottom: CardValue(unit: .mouse))),
-                        CardModel(values: .two(top: CardValue(unit: .mouse), bottom: CardValue(unit: .unicorn))),
-                        CardModel(values: .two(top: CardValue(unit: .dolphin), bottom: CardValue(unit: .mouse))),
-                        CardModel(values: .two(top: CardValue(unit: .unicorn), bottom: CardValue(unit: .pizza))),
-                        CardModel(values: .two(top: CardValue(unit: .unicorn), bottom: CardValue(unit: .mouse)))
+                        CardModel(values: .two(top: Measurement(unit: .unicorn), bottom: Measurement(unit: .rock))),
+                        CardModel(values: .two(top: Measurement(unit: .pizza), bottom: Measurement(unit: .mouse))),
+                        CardModel(values: .two(top: Measurement(unit: .mouse), bottom: Measurement(unit: .unicorn))),
+                        CardModel(values: .two(top: Measurement(unit: .dolphin), bottom: Measurement(unit: .mouse))),
+                        CardModel(values: .two(top: Measurement(unit: .unicorn), bottom: Measurement(unit: .pizza))),
+                        CardModel(values: .two(top: Measurement(unit: .unicorn), bottom: Measurement(unit: .mouse)))
                 ])
                 state = GameState.level(nextLevel)
                 nextLevel.didUpdate = levelUpdated(update:)
@@ -140,12 +140,12 @@ class GameModel {
             else if levelNumber == 5 {
                // let model = LevelModel(startValues: [
                 let nextLevel = LevelModel(startValues: [
-                    CardValue(unit: .mm, quantity: 100),
-                    CardValue(unit: .cm, quantity: 10),
+                    Measurement(unit: .mm, quantity: 100),
+                    Measurement(unit: .cm, quantity: 10),
                 ], endUnit: .km, castSize: 3, deck: [
-                        CardModel(values: .two(top: CardValue(unit: .mm, quantity: 10), bottom: CardValue(unit: .cm, quantity: 1))),
-                        CardModel(values: .two(top: CardValue(unit: .cm, quantity: 100), bottom: CardValue(unit: .m, quantity: 1))),
-                        CardModel(values: .two(top: CardValue(unit: .km, quantity: 1), bottom: CardValue(unit: .m, quantity: 1000)))
+                        CardModel(values: .two(top: Measurement(unit: .mm, quantity: 10), bottom: Measurement(unit: .cm, quantity: 1))),
+                        CardModel(values: .two(top: Measurement(unit: .cm, quantity: 100), bottom: Measurement(unit: .m, quantity: 1))),
+                        CardModel(values: .two(top: Measurement(unit: .km, quantity: 1), bottom: Measurement(unit: .m, quantity: 1000)))
             ])
                 state = GameState.level(nextLevel)
                 nextLevel.didUpdate = levelUpdated(update:)

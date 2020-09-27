@@ -9,9 +9,9 @@
 import Foundation
 import CoreGraphics
 
-struct CardValue {
-    let unit: Unit
+struct Measurement {
     let quantity: CGFloat
+    let unit: Unit
     init(unit: Unit, quantity: CGFloat = 1) {
         self.unit = unit
         self.quantity = quantity
@@ -48,22 +48,16 @@ class CardModel: CustomStringConvertible, Equatable {
     /// Enum for saying the type of values of a card
     enum CardValues {
         /// Indicates a card supports one unit
-        case one(CardValue)
+        case one(Measurement)
         /// A card that supports two units
-        case two(top: CardValue, bottom: CardValue)
+        case two(top: Measurement, bottom: Measurement)
     }
 
     // MARK: - Properties
 
-    /// The values(s) of this card
-    var values: CardValues
-
-    /// The uuid of the card for tracking equality
-    private let uuid = UUID()
-
     /// Closure for informing listener (usually a sprite) of an update
     var didUpdate: ((Update) -> Void)?
-
+    
     /// Tracks cast state of the card
     var castState = CastState.uncasted {
         didSet {
@@ -71,6 +65,13 @@ class CardModel: CustomStringConvertible, Equatable {
             didUpdate?(.cast(castState))
         }
     }
+    
+    /// The values(s) of this card
+    var values: CardValues
+
+    /// The uuid of the card for tracking equality
+    private let uuid = UUID()
+
 
     // MARK: - Initialization
 
